@@ -15,12 +15,15 @@ class Poll extends StatefulWidget {
 class _PollState extends State<Poll> {
   FightPoll poll;
   FightInfo info;
+  Notifier notifier;
+  Color color;
 
   @override
   void initState() {
     super.initState();
     this.poll = this._poll();
     this.info = this._info();
+    this.notifier = Notifier.None;
   }
 
   FightInfo _info() {
@@ -166,7 +169,9 @@ class _PollState extends State<Poll> {
             margin: EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(children: <Widget>[
               Container(
-                color: Colors.red[200],
+                color: this.notifier == Notifier.Red
+                    ? Colors.white
+                    : Colors.red[200],
                 child: ListTile(
                   title: Text(
                     "$name1",
@@ -177,12 +182,28 @@ class _PollState extends State<Poll> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   enabled: this.info.status,
-                  trailing: Icon(Icons.check_circle_outline),
-                  onTap: () {},
+                  trailing: Icon(
+                    this.notifier == Notifier.Red
+                        ? Icons.check_circle
+                        : Icons.check_circle_outline,
+                    color: this.notifier == Notifier.Red
+                        ? Colors.red[200]
+                        : Colors.black45,
+                  ),
+                  onTap: () {
+                    if (this.notifier == Notifier.Red) {
+                      return;
+                    } else if (this.notifier != Notifier.Red) {
+                      this.notifier = Notifier.Red;
+                    }
+                    setState(() {});
+                  },
                 ),
               ),
               Container(
-                color: Colors.yellow[200],
+                color: this.notifier == Notifier.Yellow
+                    ? Colors.white
+                    : Colors.yellow[200],
                 child: ListTile(
                   title: Text(
                     "$name2",
@@ -193,12 +214,28 @@ class _PollState extends State<Poll> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   enabled: this.info.status,
-                  trailing: Icon(Icons.check_circle_outline),
-                  onTap: () {},
+                  trailing: Icon(
+                    this.notifier == Notifier.Yellow
+                        ? Icons.check_circle
+                        : Icons.check_circle_outline,
+                    color: this.notifier == Notifier.Yellow
+                        ? Colors.yellow[700]
+                        : Colors.black45,
+                  ),
+                  onTap: () {
+                    if (this.notifier == Notifier.Yellow) {
+                      return;
+                    } else if (this.notifier != Notifier.Yellow) {
+                      this.notifier = Notifier.Yellow;
+                    }
+                    setState(() {});
+                  },
                 ),
               ),
               Container(
-                color: Colors.blue[200],
+                color: this.notifier == Notifier.Blue
+                    ? Colors.white
+                    : Colors.blue[200],
                 child: ListTile(
                   title: const Text(
                     "Draw",
@@ -209,13 +246,28 @@ class _PollState extends State<Poll> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   enabled: this.info.status,
-                  trailing: Icon(Icons.check_circle_outline),
-                  onTap: () {},
+                  trailing: Icon(
+                    this.notifier == Notifier.Blue
+                        ? Icons.check_circle
+                        : Icons.check_circle_outline,
+                    color: this.notifier == Notifier.Blue
+                        ? Colors.blue[200]
+                        : Colors.black45,
+                  ),
+                  onTap: () {
+                    if (this.notifier == Notifier.Blue) {
+                      return;
+                    } else if (this.notifier != Notifier.Blue) {
+                      this.notifier = Notifier.Blue;
+                    }
+                    setState(() {});
+                  },
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(0.0),
-                color: Colors.green[200],
+                color: this.notifier == Notifier.Green
+                    ? Colors.white
+                    : Colors.green[200],
                 child: ListTile(
                   title: const Text(
                     "Canceled",
@@ -226,8 +278,22 @@ class _PollState extends State<Poll> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   enabled: this.info.status,
-                  trailing: Icon(Icons.check_circle_outline),
-                  onTap: () {},
+                  trailing: Icon(
+                    this.notifier == Notifier.Green
+                        ? Icons.check_circle
+                        : Icons.check_circle_outline,
+                    color: this.notifier == Notifier.Green
+                        ? Colors.green[200]
+                        : Colors.black45,
+                  ),
+                  onTap: () {
+                    if (this.notifier == Notifier.Green) {
+                      return;
+                    } else if (this.notifier != Notifier.Red) {
+                      this.notifier = Notifier.Green;
+                    }
+                    setState(() {});
+                  },
                 ),
               ),
             ]),
@@ -239,12 +305,19 @@ class _PollState extends State<Poll> {
               style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
-                  decoration:
-                      TextDecoration.combine([TextDecoration.underline])),
+                  decoration: TextDecoration.combine([TextDecoration.none])),
             ),
           ),
         ]),
       ),
     );
   }
+}
+
+enum Notifier {
+  Red,
+  Yellow,
+  Blue,
+  Green,
+  None,
 }
