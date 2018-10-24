@@ -1,34 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/model.dart';
 import 'package:mma_poll/poll.dart';
+import 'package:mma_poll/database.dart';
 
 class FightCard extends StatefulWidget {
-  final FightPoll poll;
+  final FightInfo infos;
 
-  FightCard({this.poll});
+  FightCard({this.infos});
 
   @override
   _FightCardState createState() => _FightCardState();
 }
 
 class _FightCardState extends State<FightCard> {
-  int draw, name1Num, name2Num, canceled;
   bool status;
   String name1, name2;
+  FightPoll poll;
 
   @override
   void initState() {
     super.initState();
-    //int
-    this.draw = widget.poll.drawNum;
-    this.name1Num = widget.poll.name1Num;
-    this.name2Num = widget.poll.name2Num;
-    this.canceled = widget.poll.canceledNum;
     //bool
-    this.status = widget.poll.status;
+    this.status = widget.infos.status;
     //string
-    this.name1 = widget.poll.name1Name;
-    this.name2 = widget.poll.name2Name;
+    this.name1 = widget.infos.name1Name;
+    this.name2 = widget.infos.name2Name;
+    //poll
+    this.poll = this._getPoll();
+  }
+
+  FightPoll _getPoll() {
+    for (int i = 0; i < polls.length; i++) {
+      FightPoll poll = polls[i];
+      if (poll.id == widget.infos.pollId) {
+        return poll;
+      }
+    }
+    return null;
   }
 
   @override
@@ -37,6 +45,11 @@ class _FightCardState extends State<FightCard> {
   }
 
   Widget _cardInfo() {
+    int name1Num = this.poll.name1Num;
+    int name2Num = this.poll.name2Num;
+    int drawNum = this.poll.drawNum;
+    int canceledNum = this.poll.canceledNum;
+
     return Column(
       children: <Widget>[
         Padding(
@@ -45,7 +58,7 @@ class _FightCardState extends State<FightCard> {
             left: 20.0,
           ),
           child: Text(
-            widget.poll.title,
+            widget.infos.title,
             textAlign: TextAlign.start,
             style: TextStyle(
               color: Colors.white,
@@ -82,7 +95,7 @@ class _FightCardState extends State<FightCard> {
                     ),
                   ),
                   Text(
-                    "$draw",
+                    "$drawNum",
                     style: TextStyle(color: Colors.white),
                   ),
                 ]),
@@ -130,7 +143,7 @@ class _FightCardState extends State<FightCard> {
                     ),
                   ),
                   Text(
-                    "$canceled",
+                    "$canceledNum",
                     style: TextStyle(color: Colors.white),
                   ),
                 ]),
@@ -153,7 +166,7 @@ class _FightCardState extends State<FightCard> {
             context,
             MaterialPageRoute(
               builder: (context) => Poll(
-                    widget.poll.id,
+                    widget.infos.id,
                   ),
             ),
           );
@@ -178,7 +191,7 @@ class _FightCardState extends State<FightCard> {
                 fit: StackFit.expand,
                 children: <Widget>[
                   Image.network(
-                    widget.poll.pic,
+                    widget.infos.pic,
                     fit: BoxFit.cover,
                   ),
                   Positioned(

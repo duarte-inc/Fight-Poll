@@ -12,7 +12,7 @@ class _FeedState extends State<Feed> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.yellow[50],
-      child: polls == null
+      child: infos == null
           ? Container(
               color: Colors.yellow[50],
               width: MediaQuery.of(context).size.width,
@@ -29,12 +29,12 @@ class _FeedState extends State<Feed> {
             )
           : ListView.builder(
               padding: EdgeInsets.only(top: 5.0),
-              itemCount: polls.length,
+              itemCount: infos.length,
               itemBuilder: (BuildContext context, int index) {
                 return Column(
                   children: <Widget>[
                     FightCard(
-                      poll: polls[index],
+                      infos: infos[index],
                     ),
                   ],
                 );

@@ -14,18 +14,35 @@ class Poll extends StatefulWidget {
 
 class _PollState extends State<Poll> {
   FightPoll poll;
+  FightInfo info;
 
   @override
   void initState() {
     super.initState();
     this.poll = this._poll();
+    this.info = this._info();
+  }
+
+  FightInfo _info() {
+    for (int i = 0; i < infos.length; i++) {
+      FightInfo info = infos[i];
+      if (info.id == widget.id) {
+        return info;
+      }
+    }
+    return null;
   }
 
   FightPoll _poll() {
-    for (int i = 0; i < polls.length; i++) {
-      FightPoll poll = polls[i];
-      if (widget.id == poll.id) {
-        return poll;
+    for (int i = 0; i < infos.length; i++) {
+      FightInfo info = infos[i];
+      if (info.id == widget.id) {
+        for (int j = 0; j < polls.length; j++) {
+          FightPoll poll = polls[j];
+          if (poll.id == info.pollId) {
+            return poll;
+          }
+        }
       }
     }
     return null;
@@ -66,7 +83,7 @@ class _PollState extends State<Poll> {
       ),
       title: Container(
         alignment: Alignment.center,
-        child: this.poll.status
+        child: this.info.status
             ? Text(
                 "Vote",
                 textAlign: TextAlign.center,
@@ -90,14 +107,16 @@ class _PollState extends State<Poll> {
 
   @override
   Widget build(BuildContext context) {
-    String title = this.poll.title;
-    String name1 = this.poll.name1Name;
+    String title = this.info.title;
+    String name1 = this.info.name1Name;
+    String name2 = this.info.name2Name;
+
     int name1Num = this.poll.name1Num;
-    String name2 = this.poll.name2Name;
     int name2Num = this.poll.name2Num;
     int drawNum = this.poll.drawNum;
     int cancelNum = this.poll.canceledNum;
-    String date = this._dateFormater(this.poll.postedDate);
+
+    String date = this._dateFormater(this.info.postedDate);
 
     return Scaffold(
       appBar: this._appBar(),
@@ -135,7 +154,7 @@ class _PollState extends State<Poll> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: Image.network(
-                this.poll.pic,
+                this.info.pic,
                 fit: BoxFit.cover,
                 height: MediaQuery.of(context).size.height * .28,
                 width: MediaQuery.of(context).size.width * .95,
@@ -157,7 +176,7 @@ class _PollState extends State<Poll> {
                     "$name1Num",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  enabled: this.poll.status,
+                  enabled: this.info.status,
                   trailing: Icon(Icons.check_circle_outline),
                   onTap: () {},
                 ),
@@ -173,7 +192,7 @@ class _PollState extends State<Poll> {
                     "$name2Num",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  enabled: this.poll.status,
+                  enabled: this.info.status,
                   trailing: Icon(Icons.check_circle_outline),
                   onTap: () {},
                 ),
@@ -189,7 +208,7 @@ class _PollState extends State<Poll> {
                     "$drawNum",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  enabled: this.poll.status,
+                  enabled: this.info.status,
                   trailing: Icon(Icons.check_circle_outline),
                   onTap: () {},
                 ),
@@ -206,7 +225,7 @@ class _PollState extends State<Poll> {
                     "$cancelNum",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  enabled: this.poll.status,
+                  enabled: this.info.status,
                   trailing: Icon(Icons.check_circle_outline),
                   onTap: () {},
                 ),
