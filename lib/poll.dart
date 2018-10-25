@@ -13,10 +13,17 @@ class Poll extends StatefulWidget {
 }
 
 class _PollState extends State<Poll> {
+  //class level widgets
   FightPoll poll;
   FightInfo info;
-  Notifier notifier;
+  Notifier notifier, lastNotifier;
   Color color;
+
+  //class level ints
+  int name1Num, name2Num, drawNum, cancelNum;
+
+  //class level bools
+  bool redSelected, blueSelected, greenSelected, yellowSelected;
 
   @override
   void initState() {
@@ -24,6 +31,13 @@ class _PollState extends State<Poll> {
     this.poll = this._poll();
     this.info = this._info();
     this.notifier = Notifier.None;
+    this.lastNotifier = Notifier.None;
+
+    //numbers
+    this.name1Num = this.poll.name1Num;
+    this.name2Num = this.poll.name2Num;
+    this.drawNum = this.poll.drawNum;
+    this.cancelNum = this.poll.canceledNum;
   }
 
   FightInfo _info() {
@@ -49,6 +63,27 @@ class _PollState extends State<Poll> {
       }
     }
     return null;
+  }
+
+  void _selectionManager() {
+    if (this.notifier == Notifier.Red) {
+      this.name1Num++;
+    } else if (this.notifier == Notifier.Yellow) {
+      this.name2Num++;
+    } else if (this.notifier == Notifier.Blue) {
+      this.drawNum++;
+    } else if (this.notifier == Notifier.Green) {
+      this.cancelNum++;
+    }
+    if (this.lastNotifier == Notifier.Red) {
+      this.name1Num--;
+    } else if (this.lastNotifier == Notifier.Yellow) {
+      this.name2Num--;
+    } else if (this.lastNotifier == Notifier.Blue) {
+      this.drawNum--;
+    } else if (this.lastNotifier == Notifier.Green) {
+      this.cancelNum--;
+    }
   }
 
   String _dateFormater(DateTime d) {
@@ -110,16 +145,17 @@ class _PollState extends State<Poll> {
 
   @override
   Widget build(BuildContext context) {
-    String title = this.info.title;
-    String name1 = this.info.name1Name;
-    String name2 = this.info.name2Name;
+    final String title = this.info.title;
+    final String name1 = this.info.name1Name;
+    final String name2 = this.info.name2Name;
 
-    int name1Num = this.poll.name1Num;
-    int name2Num = this.poll.name2Num;
-    int drawNum = this.poll.drawNum;
-    int cancelNum = this.poll.canceledNum;
+    final String date = this._dateFormater(this.info.postedDate);
 
-    String date = this._dateFormater(this.info.postedDate);
+    print("current $notifier");
+    print("last $lastNotifier");
+
+    //This manages selection of choices
+    this._selectionManager();
 
     return Scaffold(
       appBar: this._appBar(),
@@ -171,7 +207,7 @@ class _PollState extends State<Poll> {
               Container(
                 color: this.notifier == Notifier.Red
                     ? Colors.white
-                    : Colors.red[200],
+                    : Colors.red[100],
                 child: ListTile(
                   title: Text(
                     "$name1",
@@ -187,23 +223,25 @@ class _PollState extends State<Poll> {
                         ? Icons.check_circle
                         : Icons.check_circle_outline,
                     color: this.notifier == Notifier.Red
-                        ? Colors.red[200]
+                        ? Colors.purple[200]
                         : Colors.black45,
                   ),
                   onTap: () {
-                    if (this.notifier == Notifier.Red) {
-                      return;
-                    } else if (this.notifier != Notifier.Red) {
-                      this.notifier = Notifier.Red;
-                    }
-                    setState(() {});
+                    setState(() {
+                      this.lastNotifier = this.notifier;
+                      if (this.notifier == Notifier.Red) {
+                        return;
+                      } else if (this.notifier != Notifier.Red) {
+                        this.notifier = Notifier.Red;
+                      }
+                    });
                   },
                 ),
               ),
               Container(
                 color: this.notifier == Notifier.Yellow
                     ? Colors.white
-                    : Colors.yellow[200],
+                    : Colors.yellow[100],
                 child: ListTile(
                   title: Text(
                     "$name2",
@@ -219,23 +257,25 @@ class _PollState extends State<Poll> {
                         ? Icons.check_circle
                         : Icons.check_circle_outline,
                     color: this.notifier == Notifier.Yellow
-                        ? Colors.yellow[700]
+                        ? Colors.purple[200]
                         : Colors.black45,
                   ),
                   onTap: () {
-                    if (this.notifier == Notifier.Yellow) {
-                      return;
-                    } else if (this.notifier != Notifier.Yellow) {
-                      this.notifier = Notifier.Yellow;
-                    }
-                    setState(() {});
+                    this.lastNotifier = this.notifier;
+                    setState(() {
+                      if (this.notifier == Notifier.Yellow) {
+                        return;
+                      } else if (this.notifier != Notifier.Yellow) {
+                        this.notifier = Notifier.Yellow;
+                      }
+                    });
                   },
                 ),
               ),
               Container(
                 color: this.notifier == Notifier.Blue
                     ? Colors.white
-                    : Colors.blue[200],
+                    : Colors.blue[100],
                 child: ListTile(
                   title: const Text(
                     "Draw",
@@ -251,23 +291,25 @@ class _PollState extends State<Poll> {
                         ? Icons.check_circle
                         : Icons.check_circle_outline,
                     color: this.notifier == Notifier.Blue
-                        ? Colors.blue[200]
+                        ? Colors.purple[200]
                         : Colors.black45,
                   ),
                   onTap: () {
-                    if (this.notifier == Notifier.Blue) {
-                      return;
-                    } else if (this.notifier != Notifier.Blue) {
-                      this.notifier = Notifier.Blue;
-                    }
-                    setState(() {});
+                    setState(() {
+                      this.lastNotifier = this.notifier;
+                      if (this.notifier == Notifier.Blue) {
+                        return;
+                      } else if (this.notifier != Notifier.Blue) {
+                        this.notifier = Notifier.Blue;
+                      }
+                    });
                   },
                 ),
               ),
               Container(
                 color: this.notifier == Notifier.Green
                     ? Colors.white
-                    : Colors.green[200],
+                    : Colors.green[100],
                 child: ListTile(
                   title: const Text(
                     "Canceled",
@@ -283,16 +325,18 @@ class _PollState extends State<Poll> {
                         ? Icons.check_circle
                         : Icons.check_circle_outline,
                     color: this.notifier == Notifier.Green
-                        ? Colors.green[200]
+                        ? Colors.purple[200]
                         : Colors.black45,
                   ),
                   onTap: () {
-                    if (this.notifier == Notifier.Green) {
-                      return;
-                    } else if (this.notifier != Notifier.Red) {
-                      this.notifier = Notifier.Green;
-                    }
-                    setState(() {});
+                    setState(() {
+                      this.lastNotifier = this.notifier;
+                      if (this.notifier == Notifier.Green) {
+                        return;
+                      } else if (this.notifier != Notifier.Green) {
+                        this.notifier = Notifier.Green;
+                      }
+                    });
                   },
                 ),
               ),
