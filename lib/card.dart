@@ -186,7 +186,9 @@ class _FightCardState extends State<FightCard> {
           width: MediaQuery.of(context).size.width,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
+            
             child: Material(
+              
               child: Stack(
                 fit: StackFit.expand,
                 children: <Widget>[

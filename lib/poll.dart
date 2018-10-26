@@ -204,141 +204,181 @@ class _PollState extends State<Poll> {
             padding: EdgeInsets.only(top: 5.0),
             margin: EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(children: <Widget>[
-              Container(
-                color: this.notifier == Notifier.Red
-                    ? Colors.white
-                    : Colors.red[100],
-                child: ListTile(
-                  title: Text(
-                    "$name1",
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                  subtitle: Text(
-                    "$name1Num",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  enabled: this.info.status,
-                  trailing: Icon(
-                    this.notifier == Notifier.Red
-                        ? Icons.check_circle
-                        : Icons.check_circle_outline,
+              Stack(
+                fit: StackFit.passthrough,
+                children: <Widget>[
+                  Container(
                     color: this.notifier == Notifier.Red
-                        ? Colors.purple[200]
-                        : Colors.black45,
+                        ? Colors.white
+                        : Colors.red[100],
+                    child: ListTile(
+                      title: Text(
+                        "$name1",
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                      subtitle: Text(
+                        "$name1Num",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      enabled: this.info.status,
+                      trailing: Icon(
+                        this.notifier == Notifier.Red
+                            ? Icons.check_circle
+                            : Icons.check_circle_outline,
+                        color: this.notifier == Notifier.Red
+                            ? Colors.purple[200]
+                            : Colors.black45,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          this.lastNotifier = this.notifier;
+                          if (this.notifier == Notifier.Red) {
+                            return;
+                          } else if (this.notifier != Notifier.Red) {
+                            this.notifier = Notifier.Red;
+                          }
+                        });
+                      },
+                    ),
                   ),
-                  onTap: () {
-                    setState(() {
-                      this.lastNotifier = this.notifier;
-                      if (this.notifier == Notifier.Red) {
-                        return;
-                      } else if (this.notifier != Notifier.Red) {
-                        this.notifier = Notifier.Red;
-                      }
-                    });
-                  },
-                ),
+                  Container(
+                    color: Colors.red,
+                    width: MediaQuery.of(context).size.width * .6,
+                    height: 10.0,
+                  ),
+                ],
               ),
-              Container(
-                color: this.notifier == Notifier.Yellow
-                    ? Colors.white
-                    : Colors.yellow[100],
-                child: ListTile(
-                  title: Text(
-                    "$name2",
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                  subtitle: Text(
-                    "$name2Num",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  enabled: this.info.status,
-                  trailing: Icon(
-                    this.notifier == Notifier.Yellow
-                        ? Icons.check_circle
-                        : Icons.check_circle_outline,
+              Stack(
+                fit: StackFit.passthrough,
+                children: <Widget>[
+                  Container(
                     color: this.notifier == Notifier.Yellow
-                        ? Colors.purple[200]
-                        : Colors.black45,
+                        ? Colors.white
+                        : Colors.yellow[100],
+                    child: ListTile(
+                      title: Text(
+                        "$name2",
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                      subtitle: Text(
+                        "$name2Num",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      enabled: this.info.status,
+                      trailing: Icon(
+                        this.notifier == Notifier.Yellow
+                            ? Icons.check_circle
+                            : Icons.check_circle_outline,
+                        color: this.notifier == Notifier.Yellow
+                            ? Colors.purple[200]
+                            : Colors.black45,
+                      ),
+                      onTap: () {
+                        this.lastNotifier = this.notifier;
+                        setState(() {
+                          if (this.notifier == Notifier.Yellow) {
+                            return;
+                          } else if (this.notifier != Notifier.Yellow) {
+                            this.notifier = Notifier.Yellow;
+                          }
+                        });
+                      },
+                    ),
                   ),
-                  onTap: () {
-                    this.lastNotifier = this.notifier;
-                    setState(() {
-                      if (this.notifier == Notifier.Yellow) {
-                        return;
-                      } else if (this.notifier != Notifier.Yellow) {
-                        this.notifier = Notifier.Yellow;
-                      }
-                    });
-                  },
-                ),
+                  Container(
+                    color: Colors.yellow,
+                    width: MediaQuery.of(context).size.width * .1,
+                    height: 10.0,
+                  ),
+                ],
               ),
-              Container(
-                color: this.notifier == Notifier.Blue
-                    ? Colors.white
-                    : Colors.blue[100],
-                child: ListTile(
-                  title: const Text(
-                    "Draw",
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                  subtitle: Text(
-                    "$drawNum",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  enabled: this.info.status,
-                  trailing: Icon(
-                    this.notifier == Notifier.Blue
-                        ? Icons.check_circle
-                        : Icons.check_circle_outline,
+              Stack(
+                fit: StackFit.passthrough,
+                children: <Widget>[
+                  Container(
                     color: this.notifier == Notifier.Blue
-                        ? Colors.purple[200]
-                        : Colors.black45,
+                        ? Colors.white
+                        : Colors.blue[100],
+                    child: ListTile(
+                      title: const Text(
+                        "Draw",
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                      subtitle: Text(
+                        "$drawNum",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      enabled: this.info.status,
+                      trailing: Icon(
+                        this.notifier == Notifier.Blue
+                            ? Icons.check_circle
+                            : Icons.check_circle_outline,
+                        color: this.notifier == Notifier.Blue
+                            ? Colors.purple[200]
+                            : Colors.black45,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          this.lastNotifier = this.notifier;
+                          if (this.notifier == Notifier.Blue) {
+                            return;
+                          } else if (this.notifier != Notifier.Blue) {
+                            this.notifier = Notifier.Blue;
+                          }
+                        });
+                      },
+                    ),
                   ),
-                  onTap: () {
-                    setState(() {
-                      this.lastNotifier = this.notifier;
-                      if (this.notifier == Notifier.Blue) {
-                        return;
-                      } else if (this.notifier != Notifier.Blue) {
-                        this.notifier = Notifier.Blue;
-                      }
-                    });
-                  },
-                ),
+                  Container(
+                    color: Colors.blue,
+                    width: MediaQuery.of(context).size.width * .2,
+                    height: 10.0,
+                  ),
+                ],
               ),
-              Container(
-                color: this.notifier == Notifier.Green
-                    ? Colors.white
-                    : Colors.green[100],
-                child: ListTile(
-                  title: const Text(
-                    "Canceled",
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                  subtitle: Text(
-                    "$cancelNum",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  enabled: this.info.status,
-                  trailing: Icon(
-                    this.notifier == Notifier.Green
-                        ? Icons.check_circle
-                        : Icons.check_circle_outline,
+              Stack(
+                fit: StackFit.passthrough,
+                children: <Widget>[
+                  Container(
                     color: this.notifier == Notifier.Green
-                        ? Colors.purple[200]
-                        : Colors.black45,
+                        ? Colors.white
+                        : Colors.green[100],
+                    child: ListTile(
+                      title: const Text(
+                        "Canceled",
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                      subtitle: Text(
+                        "$cancelNum",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      enabled: this.info.status,
+                      trailing: Icon(
+                        this.notifier == Notifier.Green
+                            ? Icons.check_circle
+                            : Icons.check_circle_outline,
+                        color: this.notifier == Notifier.Green
+                            ? Colors.purple[200]
+                            : Colors.black45,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          this.lastNotifier = this.notifier;
+                          if (this.notifier == Notifier.Green) {
+                            return;
+                          } else if (this.notifier != Notifier.Green) {
+                            this.notifier = Notifier.Green;
+                          }
+                        });
+                      },
+                    ),
                   ),
-                  onTap: () {
-                    setState(() {
-                      this.lastNotifier = this.notifier;
-                      if (this.notifier == Notifier.Green) {
-                        return;
-                      } else if (this.notifier != Notifier.Green) {
-                        this.notifier = Notifier.Green;
-                      }
-                    });
-                  },
-                ),
+                  Container(
+                    color: Colors.green,
+                    width: MediaQuery.of(context).size.width * .1,
+                    height: 10.0,
+                  ),
+                ],
               ),
             ]),
           ),
