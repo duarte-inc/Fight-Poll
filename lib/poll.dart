@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/model.dart';
 import 'package:mma_poll/database.dart';
+import 'package:mma_poll/animation.dart';
 
 class Poll extends StatefulWidget {
   final int id;
@@ -24,21 +25,7 @@ class _PollState extends State<Poll> {
 
   //class level bools
   bool redSelected, blueSelected, greenSelected, yellowSelected;
-
-  @override
-  void initState() {
-    super.initState();
-    this.poll = this._poll();
-    this.info = this._info();
-    this.notifier = Notifier.None;
-    this.lastNotifier = Notifier.None;
-
-    //numbers
-    this.name1Num = this.poll.name1Num;
-    this.name2Num = this.poll.name2Num;
-    this.drawNum = this.poll.drawNum;
-    this.cancelNum = this.poll.canceledNum;
-  }
+  bool selected;
 
   FightInfo _info() {
     for (int i = 0; i < infos.length; i++) {
@@ -144,18 +131,46 @@ class _PollState extends State<Poll> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    this.poll = this._poll();
+    this.info = this._info();
+    this.notifier = Notifier.None;
+    this.lastNotifier = Notifier.None;
+
+    // selected a poll?
+    this.selected = info.status;
+
+    //numbers
+    this.name1Num = this.poll.name1Num;
+    this.name2Num = this.poll.name2Num;
+    this.drawNum = this.poll.drawNum;
+    this.cancelNum = this.poll.canceledNum;
+  }
+
+  @override
+  void didUpdateWidget(Poll oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final String title = this.info.title;
-    final String name1 = this.info.name1Name;
-    final String name2 = this.info.name2Name;
-
-    final String date = this._dateFormater(this.info.postedDate);
-
-    print("current $notifier");
-    print("last $lastNotifier");
-
     //This manages selection of choices
+
     this._selectionManager();
+
+    //Calculating percentage
+
+    int total = this.name1Num + this.name2Num + this.drawNum + this.cancelNum;
+    double name1Perc = this.name1Num / total;
+    double name2Perc = this.name2Num / total;
+    double drawPerc = this.drawNum / total;
+    double cancelPerc = this.cancelNum / total;
 
     return Scaffold(
       appBar: this._appBar(),
@@ -171,7 +186,7 @@ class _PollState extends State<Poll> {
                 padding: EdgeInsets.all(0.0),
                 child: ListTile(
                   title: Text(
-                    "$title",
+                    "${this.info.title}",
                     style: TextStyle(
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold,
@@ -181,7 +196,7 @@ class _PollState extends State<Poll> {
                     "Poller: Thomas",
                   ),
                   enabled: true,
-                  trailing: Text("$date"),
+                  trailing: Text("${this._dateFormater(this.info.postedDate)}"),
                   onTap: () {},
                 ),
               ),
@@ -208,12 +223,10 @@ class _PollState extends State<Poll> {
                 fit: StackFit.passthrough,
                 children: <Widget>[
                   Container(
-                    color: this.notifier == Notifier.Red
-                        ? Colors.white
-                        : Colors.red[100],
+                    color: Colors.red[100],
                     child: ListTile(
                       title: Text(
-                        "$name1",
+                        "${this.info.name1Name}",
                         style: TextStyle(fontSize: 18.0),
                       ),
                       subtitle: Text(
@@ -231,6 +244,7 @@ class _PollState extends State<Poll> {
                       ),
                       onTap: () {
                         setState(() {
+                          this.selected = false;
                           this.lastNotifier = this.notifier;
                           if (this.notifier == Notifier.Red) {
                             return;
@@ -241,23 +255,26 @@ class _PollState extends State<Poll> {
                       },
                     ),
                   ),
-                  Container(
-                    color: Colors.red,
-                    width: MediaQuery.of(context).size.width * .6,
-                    height: 10.0,
-                  ),
+                  this.selected
+                      ? Container()
+                      : SizeAnimation(
+                          child: Container(
+                            color: Colors.red,
+                            width:
+                                MediaQuery.of(context).size.width * name1Perc,
+                            height: 10.0,
+                          ),
+                        ),
                 ],
               ),
               Stack(
                 fit: StackFit.passthrough,
                 children: <Widget>[
                   Container(
-                    color: this.notifier == Notifier.Yellow
-                        ? Colors.white
-                        : Colors.yellow[100],
+                    color: Colors.yellow[100],
                     child: ListTile(
                       title: Text(
-                        "$name2",
+                        "${this.info.name2Name}",
                         style: TextStyle(fontSize: 18.0),
                       ),
                       subtitle: Text(
@@ -274,6 +291,7 @@ class _PollState extends State<Poll> {
                             : Colors.black45,
                       ),
                       onTap: () {
+                        this.selected = false;
                         this.lastNotifier = this.notifier;
                         setState(() {
                           if (this.notifier == Notifier.Yellow) {
@@ -285,20 +303,23 @@ class _PollState extends State<Poll> {
                       },
                     ),
                   ),
-                  Container(
-                    color: Colors.yellow,
-                    width: MediaQuery.of(context).size.width * .1,
-                    height: 10.0,
-                  ),
+                  this.selected
+                      ? Container()
+                      : SizeAnimation(
+                          child: Container(
+                            color: Colors.yellow[700],
+                            width:
+                                MediaQuery.of(context).size.width * name2Perc,
+                            height: 10.0,
+                          ),
+                        ),
                 ],
               ),
               Stack(
                 fit: StackFit.passthrough,
                 children: <Widget>[
                   Container(
-                    color: this.notifier == Notifier.Blue
-                        ? Colors.white
-                        : Colors.blue[100],
+                    color: Colors.blue[100],
                     child: ListTile(
                       title: const Text(
                         "Draw",
@@ -319,6 +340,7 @@ class _PollState extends State<Poll> {
                       ),
                       onTap: () {
                         setState(() {
+                          this.selected = false;
                           this.lastNotifier = this.notifier;
                           if (this.notifier == Notifier.Blue) {
                             return;
@@ -329,20 +351,22 @@ class _PollState extends State<Poll> {
                       },
                     ),
                   ),
-                  Container(
-                    color: Colors.blue,
-                    width: MediaQuery.of(context).size.width * .2,
-                    height: 10.0,
-                  ),
+                  this.selected
+                      ? Container()
+                      : SizeAnimation(
+                          child: Container(
+                            color: Colors.blue,
+                            width: MediaQuery.of(context).size.width * drawPerc,
+                            height: 10.0,
+                          ),
+                        ),
                 ],
               ),
               Stack(
                 fit: StackFit.passthrough,
                 children: <Widget>[
                   Container(
-                    color: this.notifier == Notifier.Green
-                        ? Colors.white
-                        : Colors.green[100],
+                    color: Colors.green[100],
                     child: ListTile(
                       title: const Text(
                         "Canceled",
@@ -363,6 +387,7 @@ class _PollState extends State<Poll> {
                       ),
                       onTap: () {
                         setState(() {
+                          this.selected = false;
                           this.lastNotifier = this.notifier;
                           if (this.notifier == Notifier.Green) {
                             return;
@@ -373,11 +398,16 @@ class _PollState extends State<Poll> {
                       },
                     ),
                   ),
-                  Container(
-                    color: Colors.green,
-                    width: MediaQuery.of(context).size.width * .1,
-                    height: 10.0,
-                  ),
+                  this.selected
+                      ? Container()
+                      : SizeAnimation(
+                          child: Container(
+                            color: Colors.green,
+                            width:
+                                MediaQuery.of(context).size.width * cancelPerc,
+                            height: 10.0,
+                          ),
+                        ),
                 ],
               ),
             ]),
