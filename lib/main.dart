@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/feed.dart';
+import 'package:mma_poll/poll.dart';
 
 void main() => runApp(MyApp());
 
@@ -72,7 +73,14 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: this._appBar(),
       body: Feed(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreatePoll(),
+            ),
+          );
+        },
         tooltip: 'add',
         child: Icon(Icons.add),
       ),
