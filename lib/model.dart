@@ -1,22 +1,26 @@
-class FightInfo {
-  final int id, pollId;
-  final String title, pic, name1Name, name2Name;
+//-----------------FIGHT INFO------------------
+class Info {
+  final int id;
+  final int userId;
+  final int pollId;
+  final String title, pic, name1, name2;
   final DateTime postedDate;
   final bool status;
 
-  FightInfo({
+  Info({
     this.id,
     this.pollId,
+    this.userId,
     this.title,
     this.pic,
     this.postedDate,
-    this.name1Name,
-    this.name2Name,
+    this.name1,
+    this.name2,
     this.status,
   });
 }
 
-//------------------FIGHT POLL---------------
+//------------------FIGHT POLL-----------------
 class FightPoll {
   final int id;
   final int drawNum, name1Num, name2Num, canceledNum;
@@ -30,43 +34,53 @@ class FightPoll {
   });
 }
 
-//---------------CREATE POLL------------------
-
-class CreatePoll {
-  final int id;
-  final String title;
-  final User user_id;
-  final DateTime date;
-  final String pic;
-  final int drawNum, name1Num, name2Num, canceledNum;
-  final String name1, name2;
-
-  CreatePoll({
-    this.id,
-    this.title,
-    this.user_id,
-    this.date,
-    this.pic,
-    this.drawNum,
-    this.name1Num,
-    this.name2Num,
-    this.canceledNum,
-    this.name1,
-    this.name2,
-  });
-}
-
-// ------------USER MODEL-----------
+// -----------------USER MODEL----------------
 class User {
   final int id;
   final String email;
   final String username;
+  final String pic;
   final String password;
 
   User({
     this.id,
     this.email,
     this.username,
+    this.pic,
     this.password,
+  });
+}
+
+//------------------COMMENTS MODEL------------
+class Comment {
+  final int id;
+  final int userId;
+  final DateTime date;
+  final String comment;
+  final int likes;
+
+  Comment({
+    this.id,
+    this.userId,
+    this.comment,
+    this.date,
+    this.likes,
+  });
+}
+
+//----------------NOTIFICATION MODEL-----------
+class Notification {
+  final int id;
+  final int userId;
+  final int infoId;
+  final String subtitle;
+  final DateTime date;
+
+  Notification({
+    this.id,
+    this.userId,
+    this.infoId,
+    this.date,
+    this.subtitle,
   });
 }

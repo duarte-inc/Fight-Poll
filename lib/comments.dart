@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mma_poll/functions.dart';
+import 'package:mma_poll/database.dart';
+import 'package:mma_poll/model.dart';
 
 class Comments extends StatefulWidget {
   @override
@@ -6,38 +9,29 @@ class Comments extends StatefulWidget {
 }
 
 class _CommentsState extends State<Comments> {
-  Widget _appBar() {
-    return AppBar(
-      leading: new IconButton(
-        iconSize: 30.0,
-        icon: Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-      title: Container(
-        alignment: Alignment.center,
-        child: Text("Comments "),
-      ),
-      actions: <Widget>[
-        IconButton(
-          iconSize: 30.0,
-          icon: Icon(Icons.settings),
-          onPressed: () {},
-        )
-      ],
-    );
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: this._appBar(),
+      //BuildContext context, String title, String title1, bool status, Icon icon
+      appBar: appBarA(
+        context,
+        "Comments ",
+        "",
+        true,
+        Icon(Icons.arrow_back),
+      ),
       body: Container(
         child: ListView.builder(
-          itemCount: 4,
+          itemCount: comments.length,
           itemBuilder: (context, index) {
-            return CommentCard();
+            return CommentCard(
+              comment: comments[index],
+            );
           },
         ),
       ),
@@ -46,11 +40,72 @@ class _CommentsState extends State<Comments> {
 }
 
 class CommentCard extends StatefulWidget {
+  final Comment comment;
+
+  CommentCard({this.comment});
+
   @override
   _CommentCardState createState() => _CommentCardState();
 }
 
 class _CommentCardState extends State<CommentCard> {
+  String comment, avatar, username, date, likes;
+
+  String _getAvatar() {
+    for (int i = 0; i < comments.length; i++) {
+      Comment comment = comments[i];
+      if (widget.comment.id == comment.id) {
+        for (int j = 0; j < users.length; j++) {
+          User user = users[j];
+          if (comment.userId == user.id) {
+            String userPic = users[j].pic;
+            return userPic;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  String _getDate() {
+    return dateFormaterA(widget.comment.date);
+  }
+
+  String _getLikes() {
+    return viewRounderA(widget.comment.likes);
+  }
+
+  String _getUsername() {
+    for (int i = 0; i < comments.length; i++) {
+      Comment comment = comments[i];
+      if (widget.comment.id == comment.id) {
+        for (int j = 0; j < users.length; j++) {
+          User user = users[j];
+          if (comment.userId == user.id) {
+            String username = users[j].username;
+            return username;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this.avatar = this._getAvatar();
+    this.username = this._getUsername();
+    this.date = this._getDate();
+    this.comment = widget.comment.comment;
+    this.likes = this._getLikes();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     const double pad = 15.0;
@@ -70,8 +125,7 @@ class _CommentCardState extends State<CommentCard> {
                       Padding(
                         padding: EdgeInsets.only(top: pad),
                         child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://pbs.twimg.com/profile_images/762515266525761536/HHvPiuIl.jpg"),
+                          backgroundImage: NetworkImage(avatar),
                           radius: 25.0,
                         ),
                       ),
@@ -83,7 +137,7 @@ class _CommentCardState extends State<CommentCard> {
                               padding: EdgeInsets.only(
                                   left: pad, right: pad, top: pad),
                               child: Text(
-                                "Justine Beiber",
+                                "${this.username}",
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 17.8,
@@ -94,7 +148,7 @@ class _CommentCardState extends State<CommentCard> {
                             Padding(
                               padding: EdgeInsets.only(left: pad),
                               child: Text(
-                                "2 hours ago",
+                                "${this.date}",
                                 style: TextStyle(
                                     color: Colors.grey[700], fontSize: 14.0),
                               ),
@@ -108,11 +162,11 @@ class _CommentCardState extends State<CommentCard> {
                 Container(
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.only(
-                      left: 67.0, top: 2.0, bottom: 6.0, right: 8.0),
+                      left: 66.0, top: 2.0, bottom: 0.0, right: 6.0),
                   child: Column(
                     children: <Widget>[
                       Text(
-                        "Oaks have spirally arranged leaves, with lobate margins in many species; some have serrated leaves or entire leaves with smooth margins. Many deciduous species are marcescent, not dropping dead leaves until spring. In spring, a single oak tree produces both male flowers (in the form of catkins) and small female flowers",
+                        "${this.comment}",
                         style: TextStyle(
                           fontSize: 15.5,
                         ),
@@ -124,7 +178,7 @@ class _CommentCardState extends State<CommentCard> {
                             Container(
                               padding: EdgeInsets.only(top: 5.0),
                               child: Text(
-                                "234",
+                                "${this.likes}",
                                 style: TextStyle(),
                               ),
                             ),

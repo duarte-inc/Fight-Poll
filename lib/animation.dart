@@ -35,7 +35,6 @@ class _SizeAnimationState extends State<SizeAnimation>
   @override
   void didUpdateWidget(SizeAnimation oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print("updated");
 
     this._animationController =
         AnimationController(duration: Duration(milliseconds: 1000), vsync: this)

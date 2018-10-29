@@ -4,7 +4,7 @@ import 'package:mma_poll/poll.dart';
 import 'package:mma_poll/database.dart';
 
 class FightCard extends StatefulWidget {
-  final FightInfo infos;
+  final Info infos;
 
   FightCard({this.infos});
 
@@ -23,8 +23,8 @@ class _FightCardState extends State<FightCard> {
     //bool
     this.status = widget.infos.status;
     //string
-    this.name1 = widget.infos.name1Name;
-    this.name2 = widget.infos.name2Name;
+    this.name1 = widget.infos.name1;
+    this.name2 = widget.infos.name2;
     //poll
     this.poll = this._getPoll();
   }
@@ -181,8 +181,8 @@ class _FightCardState extends State<FightCard> {
                   blurRadius: 1.5,
                   spreadRadius: 2.0,
                 ),
-              ]),
-          height: 170.0,
+              ],),
+          height: 175.0,
           width: MediaQuery.of(context).size.width,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
@@ -208,7 +208,7 @@ class _FightCardState extends State<FightCard> {
                           end: Alignment.bottomCenter,
                           colors: [
                             Colors.black.withOpacity(0.35),
-                            Colors.black.withOpacity(0.60)
+                            Colors.black.withOpacity(0.79)
                           ],
                         ),
                       ),
@@ -232,7 +232,7 @@ class _FightCardState extends State<FightCard> {
                                     )),
                                 Container(
                                     padding: EdgeInsets.only(
-                                        top: 45.0, left: 0.0, right: 20.0),
+                                        top: 50.0, left: 0.0, right: 20.0),
                                     alignment: Alignment.topLeft,
                                     width: MediaQuery.of(context).size.width,
                                     child: this._cardInfo()),

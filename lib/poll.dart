@@ -3,6 +3,7 @@ import 'package:mma_poll/comments.dart';
 import 'package:mma_poll/model.dart';
 import 'package:mma_poll/database.dart';
 import 'package:mma_poll/animation.dart';
+import 'package:mma_poll/functions.dart';
 
 enum Notifier {
   Red,
@@ -25,7 +26,7 @@ class Poll extends StatefulWidget {
 class _PollState extends State<Poll> {
   //class level widgets
   FightPoll poll;
-  FightInfo info;
+  Info info;
   Notifier notifier, lastNotifier;
   Color color;
 
@@ -36,9 +37,9 @@ class _PollState extends State<Poll> {
   bool redSelected, blueSelected, greenSelected, yellowSelected;
   bool selected;
 
-  FightInfo _info() {
+  Info _info() {
     for (int i = 0; i < infos.length; i++) {
-      FightInfo info = infos[i];
+      Info info = infos[i];
       if (info.id == widget.id) {
         return info;
       }
@@ -48,7 +49,7 @@ class _PollState extends State<Poll> {
 
   FightPoll _poll() {
     for (int i = 0; i < infos.length; i++) {
-      FightInfo info = infos[i];
+      Info info = infos[i];
       if (info.id == widget.id) {
         for (int j = 0; j < polls.length; j++) {
           FightPoll poll = polls[j];
@@ -80,63 +81,6 @@ class _PollState extends State<Poll> {
     } else if (this.lastNotifier == Notifier.Green) {
       this.cancelNum--;
     }
-  }
-
-  String _dateFormater(DateTime d) {
-    dynamic date;
-    if (DateTime.now().year - d.year != 0) {
-      date = DateTime.now().year - d.year;
-      date = "$date y ago";
-    } else if (DateTime.now().month - d.month != 0) {
-      date = (DateTime.now().month - d.month).abs();
-      date = "$date mnz ago";
-    } else if (DateTime.now().day - d.day != 0) {
-      date = DateTime.now().day - d.day;
-      date = "$date d ago";
-    } else if (DateTime.now().hour - d.hour != 0) {
-      date = DateTime.now().hour - d.hour;
-      date = "$date h ago";
-    } else if (DateTime.now().minute - d.minute != 0) {
-      date = DateTime.now().minute - d.minute;
-      date = "$date min ago";
-    } else {
-      date = DateTime.now().second - d.second;
-      date = "$date s ago";
-    }
-    return date;
-  }
-
-  Widget _appBar() {
-    return AppBar(
-      leading: new IconButton(
-        iconSize: 30.0,
-        icon: Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-      title: Container(
-        alignment: Alignment.center,
-        child: this.info.status
-            ? Text(
-                "Vote",
-                textAlign: TextAlign.center,
-                style: TextStyle(),
-              )
-            : Text(
-                "View Poll",
-                textAlign: TextAlign.center,
-                style: TextStyle(),
-              ),
-      ),
-      actions: <Widget>[
-        IconButton(
-          iconSize: 30.0,
-          icon: Icon(Icons.settings),
-          onPressed: () {},
-        )
-      ],
-    );
   }
 
   @override
@@ -182,7 +126,13 @@ class _PollState extends State<Poll> {
     double cancelPerc = this.cancelNum / total;
 
     return Scaffold(
-      appBar: this._appBar(),
+      appBar: appBarA(
+        context,
+        "Vote",
+        "View Poll",
+        this.info.status,
+        Icon(Icons.arrow_back),
+      ),
       body: Container(
         padding: EdgeInsets.only(right: 15.0),
         color: Colors.white,
@@ -205,7 +155,7 @@ class _PollState extends State<Poll> {
                     "Poller: Thomas",
                   ),
                   enabled: true,
-                  trailing: Text("${this._dateFormater(this.info.postedDate)}"),
+                  trailing: Text("${dateFormaterA(this.info.postedDate)}"),
                   onTap: () {},
                 ),
               ),
@@ -235,7 +185,7 @@ class _PollState extends State<Poll> {
                     color: Colors.red[100],
                     child: ListTile(
                       title: Text(
-                        "${this.info.name1Name}",
+                        "${this.info.name1}",
                         style: TextStyle(fontSize: 18.0),
                       ),
                       subtitle: Text(
@@ -283,7 +233,7 @@ class _PollState extends State<Poll> {
                     color: Colors.yellow[100],
                     child: ListTile(
                       title: Text(
-                        "${this.info.name2Name}",
+                        "${this.info.name2}",
                         style: TextStyle(fontSize: 18.0),
                       ),
                       subtitle: Text(

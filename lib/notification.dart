@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:mma_poll/functions.dart';
 // Notifies when a poll you have created is closed. The thumbnail image in square will be shown
 // Also will notify when someone tags you in a comment. Profile image in circle avatar will be displayed
 
@@ -9,39 +9,22 @@ class NotificationCenter extends StatefulWidget {
 }
 
 class _NotificationCenterState extends State<NotificationCenter> {
-  Widget _appBar() {
-    return AppBar(
-      leading: new IconButton(
-        iconSize: 30.0,
-        icon: Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-      title: Container(
-        alignment: Alignment.center,
-        child: Text("Notification "),
-      ),
-      actions: <Widget>[
-        IconButton(
-          iconSize: 30.0,
-          icon: Icon(Icons.settings),
-          onPressed: () {},
-        )
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: this._appBar(),
+      appBar: appBarA(
+        context,
+        "Notifications",
+        "",
+        true,
+        Icon(Icons.arrow_back),
+      ),
       body: Container(
-        margin: EdgeInsets.only(top: 24.0),
         decoration: BoxDecoration(
           color: Colors.white,
         ),
         child: ListView.builder(
+          itemCount: 4,
           itemBuilder: (BuildContext context, int index) {
             return Container(
               padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
