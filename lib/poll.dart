@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mma_poll/comments.dart';
 import 'package:mma_poll/model.dart';
 import 'package:mma_poll/database.dart';
 import 'package:mma_poll/animation.dart';
@@ -421,15 +422,25 @@ class _PollState extends State<Poll> {
             ]),
           ),
           Container(
-            padding: EdgeInsets.only(top: 10.0),
-            child: Text(
-              "View Comments [23]",
-              style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.combine([TextDecoration.none])),
-            ),
-          ),
+              padding: EdgeInsets.only(top: 10.0),
+              child: GestureDetector(
+                child: Text(
+                  "View Comments [23]",
+                  style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                      decoration:
+                          TextDecoration.combine([TextDecoration.none])),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Comments(),
+                    ),
+                  );
+                },
+              )),
         ]),
       ),
     );

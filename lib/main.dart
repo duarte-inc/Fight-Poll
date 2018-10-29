@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/feed.dart';
 import 'package:mma_poll/poll.dart';
+import 'package:mma_poll/notification.dart';
 
 void main() => runApp(MyApp());
 
@@ -41,7 +42,14 @@ class _MyHomePageState extends State<MyHomePage> {
       leading: new IconButton(
         iconSize: 30.0,
         icon: Icon(Icons.notifications_none),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NotificationCenter(),
+            ),
+          );
+        },
       ),
       title: TextField(
         controller: this.textController,
