@@ -42,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
       leading: new IconButton(
         iconSize: 30.0,
         icon: Icon(Icons.notifications_none),
+        tooltip: 'notifications',
         onPressed: () {
           Navigator.push(
             context,
@@ -68,8 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
       actions: <Widget>[
         IconButton(
           iconSize: 30.0,
+          tooltip: 'settings',
           icon: Icon(Icons.settings),
-          onPressed: () {},
+          onPressed: () {
+            print('settings pressed');
+          },
         )
       ],
     );
@@ -89,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           );
         },
-        tooltip: 'add',
+        tooltip: 'create poll',
         child: Icon(Icons.add),
       ),
     );

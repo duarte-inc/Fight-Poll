@@ -372,25 +372,26 @@ class _PollState extends State<Poll> {
             ]),
           ),
           Container(
-              padding: EdgeInsets.only(top: 10.0),
-              child: GestureDetector(
-                child: Text(
-                  "View Comments [23]",
-                  style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      decoration:
-                          TextDecoration.combine([TextDecoration.none])),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Comments(),
-                    ),
-                  );
-                },
-              )),
+            padding: EdgeInsets.only(top: 10.0),
+            child: GestureDetector(
+              
+              child: Text(
+                "View Comments [23]",
+                style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.combine([TextDecoration.none])),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Comments(),
+                  ),
+                );
+              },
+            ),
+          ),
         ]),
       ),
     );
@@ -513,7 +514,7 @@ class _CreatePollState extends State<CreatePoll> {
                         ),
                       ),
                       onTap: () {
-                        print("cool");
+                        print("launch image picker");
                       },
                     ),
                     Container(
@@ -529,7 +530,7 @@ class _CreatePollState extends State<CreatePoll> {
                         highlightElevation: 6.0,
                         elevation: 4.0,
                         onPressed: () {
-                          print("vote created");
+                          print("poll created");
                         },
                       ),
                     )

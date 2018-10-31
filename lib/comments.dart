@@ -183,23 +183,28 @@ class _CommentCardState extends State<CommentCard> {
                               ),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {print('thumb down');},
                               icon: Icon(Icons.thumb_up),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {print('thumb up');},
                               icon: Icon(Icons.thumb_down),
                             ),
                             Expanded(
                               child: Container(
                                 padding: EdgeInsets.only(right: 12.0),
                                 alignment: Alignment.centerRight,
-                                child: Text(
-                                  "Reply",
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.orange[900],
+                                child: GestureDetector(
+                                  child: Text(
+                                    "Reply",
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Colors.orange[900],
+                                    ),
                                   ),
+                                  onTap: () {
+                                    print('reply');
+                                  },
                                 ),
                               ),
                             ),

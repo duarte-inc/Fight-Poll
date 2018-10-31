@@ -20,9 +20,7 @@ class _SizeAnimationState extends State<SizeAnimation>
     this._animationController =
         AnimationController(duration: Duration(milliseconds: 1000), vsync: this)
           ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              print("done");
-            }
+            if (status == AnimationStatus.completed) {}
             setState(() {});
           });
 

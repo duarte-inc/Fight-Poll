@@ -29,27 +29,33 @@ class _NotificationCenterState extends State<NotificationCenter> {
             return Container(
               padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
               child: Column(children: <Widget>[
-                Card(
-                  elevation: 0.0,
-                  child: ListTile(
-                    isThreeLine:
-                        false, //will be managed based on replies vs closed poll noti
-                    leading: new CircleAvatar(
-                      backgroundImage: new NetworkImage(
-                          "https://static1.squarespace.com/static/56a44a68cbced66ef85f1331/56a8cc40df40f3b3891c89a0/56a8d60fa976afa6650bc5e5/1453906043205/MIKE+TYSON.jpg"),
-                      backgroundColor: Colors.grey,
-                      radius: 28.0,
+                GestureDetector(
+                  onTap: () {
+                    print(
+                        'navigate to where the comment was made or closed poll');
+                  },
+                  child: Card(
+                    elevation: 0.0,
+                    child: ListTile(
+                      isThreeLine:
+                          false, //will be managed based on replies vs closed poll noti
+                      leading: new CircleAvatar(
+                        backgroundImage: new NetworkImage(
+                            "https://static1.squarespace.com/static/56a44a68cbced66ef85f1331/56a8cc40df40f3b3891c89a0/56a8d60fa976afa6650bc5e5/1453906043205/MIKE+TYSON.jpg"),
+                        backgroundColor: Colors.grey,
+                        radius: 28.0,
+                      ),
+                      title: Text(
+                        'Eddie vs Conor Poll is closed!',
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                      subtitle: Text('You have selected Eddie 2 hours ago '),
+                      trailing: IconButton(
+                          icon: Icon(
+                            Icons.keyboard_arrow_right,
+                          ),
+                          onPressed: () {}),
                     ),
-                    title: Text(
-                      'Eddie vs Conor Poll is closed!',
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                    subtitle: Text('You have selected Eddie 2 hours ago '),
-                    trailing: IconButton(
-                        icon: Icon(
-                          Icons.keyboard_arrow_right,
-                        ),
-                        onPressed: () {}),
                   ),
                 ),
                 Divider(

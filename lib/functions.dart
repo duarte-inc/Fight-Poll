@@ -76,7 +76,10 @@ Widget appBarA(
       IconButton(
         iconSize: 30.0,
         icon: Icon(Icons.settings),
-        onPressed: () {},
+        onPressed: () {
+          print('setting clicked');
+        },
+        tooltip: 'settings',
       )
     ],
   );
