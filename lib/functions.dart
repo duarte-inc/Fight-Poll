@@ -6,23 +6,23 @@ import 'package:flutter/material.dart';
 String dateFormaterA(DateTime timeInput) {
   dynamic date;
   if (DateTime.now().year - timeInput.year != 0) {
-    date = DateTime.now().year - timeInput.year;
-    date = "$date years ago";
+    date = (DateTime.now().year - timeInput.year).abs();
+    date = "$date years";
   } else if (DateTime.now().month - timeInput.month != 0) {
     date = (DateTime.now().month - timeInput.month).abs();
-    date = "$date monthes ago";
+    date = "$date months";
   } else if (DateTime.now().day - timeInput.day != 0) {
-    date = DateTime.now().day - timeInput.day;
-    date = "$date days ago";
+    date = (DateTime.now().day - timeInput.day).abs();
+    date = "$date days";
   } else if (DateTime.now().hour - timeInput.hour != 0) {
-    date = DateTime.now().hour - timeInput.hour;
-    date = "$date hours ago";
+    date = (DateTime.now().hour - timeInput.hour).abs();
+    date = "$date hours";
   } else if (DateTime.now().minute - timeInput.minute != 0) {
-    date = DateTime.now().minute - timeInput.minute;
-    date = "$date minutes ago";
+    date = (DateTime.now().minute - timeInput.minute).abs();
+    date = "$date minutes";
   } else {
-    date = DateTime.now().second - timeInput.second;
-    date = "$date seconds ago";
+    date = (DateTime.now().second - timeInput.second).abs();
+    date = "$date seconds";
   }
   return date;
 }
@@ -58,12 +58,11 @@ String viewRounderA(int viewInput) {
 }
 
 //----------------------------------------------------------------
-Widget appBarA(
-    BuildContext context, String title, String title1, bool status, Icon icon) {
+Widget appBarA(BuildContext context, String title, String title1, bool status) {
   return AppBar(
     leading: new IconButton(
       iconSize: 30.0,
-      icon: icon,
+      icon: Icon(Icons.arrow_back),
       onPressed: () {
         Navigator.pop(context);
       },

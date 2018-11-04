@@ -2,10 +2,10 @@
 class Info {
   final int id;
   final int userId;
-  final int pollId;
+  final int pollId; //this is for the numbers
   final String title, pic, name1, name2;
   final DateTime postedDate;
-  final bool status;
+  final bool status; //closed or not
 
   Info({
     this.id,
@@ -22,11 +22,12 @@ class Info {
 
 //------------------FIGHT POLL-----------------
 class FightPoll {
-  final int id;
+  final int id, userId;
   final int drawNum, name1Num, name2Num, canceledNum;
 
   FightPoll({
     this.id,
+    this.userId, //to get the person who created the poll
     this.drawNum,
     this.name2Num,
     this.name1Num,
@@ -54,7 +55,7 @@ class User {
 //------------------COMMENTS MODEL------------
 class Comment {
   final int id;
-  final int userId;
+  final int userId; //the person who created the comment
   final DateTime date;
   final String comment;
   final int likes;
@@ -68,19 +69,37 @@ class Comment {
   });
 }
 
-//----------------NOTIFICATION MODEL-----------
-class Notification {
+//----------------Info NOTIFICATION MODEL-----------
+class InfoNotification {
   final int id;
-  final int userId;
-  final int infoId;
-  final String subtitle;
+  final int infoId; //To get the poll names and creator pf the poll
+  final int recieverUserId; //the user recieving the notification
   final DateTime date;
 
-  Notification({
+  InfoNotification({
     this.id,
-    this.userId,
+    this.infoId,
+    this.recieverUserId,
+    this.date,
+  });
+}
+
+//-------------Reply Notification-----------------
+
+class ReplyNotification {
+  final int id;
+  final int commentId; // so we can insert the reply at this comment
+  final int senderUserId;
+  final int infoId;
+  final DateTime date;
+  final String message;
+
+  ReplyNotification({
+    this.id,
+    this.commentId,
+    this.senderUserId,
     this.infoId,
     this.date,
-    this.subtitle,
+    this.message,
   });
 }

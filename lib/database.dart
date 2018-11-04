@@ -4,6 +4,7 @@ import 'package:mma_poll/model.dart';
 final List<Info> infos = [
   Info(
     id: 1,
+    userId: 1,
     pollId: 5,
     title: "Canelo vs Floyd Money",
     pic:
@@ -15,6 +16,7 @@ final List<Info> infos = [
   ),
   Info(
     id: 2,
+    userId: 2,
     pollId: 3,
     title: "Adie Alverez vs Thomas Edison",
     pic:
@@ -26,8 +28,9 @@ final List<Info> infos = [
   ),
   Info(
     id: 3,
+    userId: 3,
     pollId: 4,
-    title: "Khabib Nermagemedov vs ...",
+    title: "Khabib Nermagemedov vs Floyd Maywhether",
     pic:
         "https://www.onlinegambling.com/news/wp-content/uploads/2018/10/Nurmagomedov-Mayweather.jpg",
     status: false,
@@ -37,8 +40,9 @@ final List<Info> infos = [
   ),
   Info(
     id: 4,
+    userId: 4,
     pollId: 2,
-    title: "Conor MCgregor vs Floyd ...",
+    title: "Conor MCgregor vs Floyd Maywhether",
     pic:
         "https://cdn.vox-cdn.com/thumbor/JjuTkmc4OMOB_tGeEfLwo0d_pi8=/0x0:3588x2392/1200x800/filters:focal(1497x648:2071x1222)/cdn.vox-cdn.com/uploads/chorus_image/image/56377393/GettyImages_839145416.0.jpg",
     status: true,
@@ -48,6 +52,7 @@ final List<Info> infos = [
   ),
   Info(
     id: 5,
+    userId: 5,
     pollId: 1,
     title: "Black Beast vs Mark Hunt",
     pic:
@@ -64,6 +69,7 @@ final List<Info> infos = [
 final List<FightPoll> polls = [
   FightPoll(
     id: 1,
+    userId: 1,
     drawNum: 23,
     canceledNum: 334,
     name2Num: 343,
@@ -71,6 +77,7 @@ final List<FightPoll> polls = [
   ),
   FightPoll(
     id: 2,
+    userId: 2,
     drawNum: 0,
     canceledNum: 90,
     name2Num: 536,
@@ -78,6 +85,7 @@ final List<FightPoll> polls = [
   ),
   FightPoll(
     id: 3,
+    userId: 3,
     drawNum: 3,
     canceledNum: 23,
     name2Num: 1,
@@ -85,6 +93,7 @@ final List<FightPoll> polls = [
   ),
   FightPoll(
     id: 4,
+    userId: 4,
     drawNum: 298,
     canceledNum: 2,
     name2Num: 3223,
@@ -92,6 +101,7 @@ final List<FightPoll> polls = [
   ),
   FightPoll(
     id: 5,
+    userId: 5,
     drawNum: 4,
     canceledNum: 2,
     name2Num: 4,
@@ -228,30 +238,76 @@ final List<Comment> comments = [
 
 //----------------------notifications------------------------
 
-final List<Notification> notifications = [
-  Notification(
+List<InfoNotification> pollNotifications = [
+  InfoNotification(
     id: 1,
     infoId: 1,
     date: DateTime(2018, 8, 5),
   ),
-  Notification(
+  InfoNotification(
     id: 2,
     infoId: 1,
     date: DateTime(2018, 9, 7),
   ),
-  Notification(
+  InfoNotification(
     id: 3,
     infoId: 2,
     date: DateTime(2018, 10, 2),
   ),
-  Notification(
+  InfoNotification(
     id: 4,
     infoId: 3,
     date: DateTime(2018, 10, 20),
   ),
-  Notification(
+  InfoNotification(
     id: 5,
     infoId: 4,
     date: DateTime(2018, 10, 29),
+  ),
+];
+
+final List<ReplyNotification> replyNotifications = [
+  ReplyNotification(
+    id: 1,
+    senderUserId: 2,
+    date: DateTime(2018, 10, 23),
+    message: "I am not watching this fight, sorry",
+  ),
+  ReplyNotification(
+    id: 2,
+    senderUserId: 1,
+    date: DateTime(2018, 10, 23),
+    message: "Are you watching this fight",
+  ),
+  ReplyNotification(
+    id: 3,
+    senderUserId: 3,
+    date: DateTime(2018, 10, 23),
+    message: "Nice, Love this fight!",
+  ),
+  ReplyNotification(
+    id: 4,
+    senderUserId: 5,
+    date: DateTime(2018, 10, 23),
+    message:
+        "The best part about this fight is that its a draw so I won't lose any cash",
+  ),
+  ReplyNotification(
+    id: 5,
+    senderUserId: 3,
+    date: DateTime(2018, 10, 23),
+    message: "This fight is going to be epic",
+  ),
+  ReplyNotification(
+    id: 6,
+    senderUserId: 5,
+    date: DateTime(2018, 10, 23),
+    message: "Are you attending this fight or na?",
+  ),
+  ReplyNotification(
+    id: 7,
+    senderUserId: 4,
+    date: DateTime(2018, 10, 23),
+    message: "hey there, I think you are wrong on this poll my friend.",
   ),
 ];

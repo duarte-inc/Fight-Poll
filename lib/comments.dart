@@ -23,7 +23,6 @@ class _CommentsState extends State<Comments> {
         "Comments ",
         "",
         true,
-        Icon(Icons.arrow_back),
       ),
       body: Container(
         child: ListView.builder(

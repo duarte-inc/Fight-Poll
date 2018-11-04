@@ -37,52 +37,48 @@ class _MyHomePageState extends State<MyHomePage> {
     this.textController.dispose();
   }
 
-  Widget _appBar() {
-    return AppBar(
-      leading: new IconButton(
-        iconSize: 30.0,
-        icon: Icon(Icons.notifications_none),
-        tooltip: 'notifications',
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NotificationCenter(),
-            ),
-          );
-        },
-      ),
-      title: TextField(
-        controller: this.textController,
-        autocorrect: false,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: 'Search...',
-        ),
-        textAlign: TextAlign.start,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 18.0,
-          decoration: TextDecoration.none,
-        ),
-      ),
-      actions: <Widget>[
-        IconButton(
-          iconSize: 30.0,
-          tooltip: 'settings',
-          icon: Icon(Icons.settings),
-          onPressed: () {
-            print('settings pressed');
-          },
-        )
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: this._appBar(),
+      appBar: AppBar(
+        leading: new IconButton(
+          iconSize: 30.0,
+          icon: Icon(Icons.notifications_none),
+          tooltip: 'notifications',
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NotificationCenter(),
+              ),
+            );
+          },
+        ),
+        title: TextField(
+          controller: this.textController,
+          autocorrect: false,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Search...',
+          ),
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 18.0,
+            decoration: TextDecoration.none,
+          ),
+        ),
+        actions: <Widget>[
+          IconButton(
+            iconSize: 30.0,
+            tooltip: 'settings',
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              print('settings pressed');
+            },
+          )
+        ],
+      ),
       body: Feed(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

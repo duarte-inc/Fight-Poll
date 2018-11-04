@@ -59,6 +59,8 @@ class _FightCardState extends State<FightCard> {
           ),
           child: Text(
             widget.infos.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.start,
             style: TextStyle(
               color: Colors.white,
@@ -174,21 +176,20 @@ class _FightCardState extends State<FightCard> {
         },
         child: Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black,
-                  blurRadius: 1.5,
-                  spreadRadius: 2.0,
-                ),
-              ],),
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 1.5,
+                spreadRadius: 2.0,
+              ),
+            ],
+          ),
           height: 175.0,
           width: MediaQuery.of(context).size.width,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
-            
             child: Material(
-              
               child: Stack(
                 fit: StackFit.expand,
                 children: <Widget>[

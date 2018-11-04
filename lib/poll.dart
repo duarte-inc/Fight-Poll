@@ -124,41 +124,55 @@ class _PollState extends State<Poll> {
     double name2Perc = this.name2Num / total;
     double drawPerc = this.drawNum / total;
     double cancelPerc = this.cancelNum / total;
-
     return Scaffold(
       appBar: appBarA(
         context,
         "Vote",
         "View Poll",
         this.info.status,
-        Icon(Icons.arrow_back),
       ),
-      body: Container(
-        padding: EdgeInsets.only(right: 15.0),
-        color: Colors.white,
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(right: 12.0),
         child: Column(children: <Widget>[
           Container(
-            child: Padding(
-              padding:
-                  EdgeInsets.only(top: 3.0, bottom: 3.0, left: 0.0, right: 0.0),
-              child: Container(
-                padding: EdgeInsets.all(0.0),
-                child: ListTile(
-                  title: Text(
-                    "${this.info.title}",
+            padding: EdgeInsets.only(
+              right: 16.0,
+              left: 16.0,
+              top: 12.0,
+            ),
+            width: MediaQuery.of(context).size.width,
+            child: Text(
+              "${this.info.title}",
+              style: TextStyle(
+                fontSize: 22.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(right: 16.0, left: 16.0, bottom: 12.0),
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  child: Text(
+                    "Poller: Thomas",
                     style: TextStyle(
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.bold,
+                      color: Colors.black45,
                     ),
                   ),
-                  subtitle: Text(
-                    "Poller: Thomas",
-                  ),
-                  enabled: true,
-                  trailing: Text("${dateFormaterA(this.info.postedDate)}"),
-                  onTap: () {},
                 ),
-              ),
+                Container(
+                  child: Text(
+                    "${dateFormaterA(this.info.postedDate)} ago",
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Padding(
@@ -182,8 +196,9 @@ class _PollState extends State<Poll> {
                 fit: StackFit.passthrough,
                 children: <Widget>[
                   Container(
-                    color: Colors.red[100],
+                    color: Colors.yellow[100],
                     child: ListTile(
+                      dense: true,
                       title: Text(
                         "${this.info.name1}",
                         style: TextStyle(fontSize: 18.0),
@@ -198,7 +213,7 @@ class _PollState extends State<Poll> {
                             ? Icons.check_circle
                             : Icons.check_circle_outline,
                         color: this.notifier == Notifier.Red
-                            ? Colors.purple[200]
+                            ? Colors.red[200]
                             : Colors.black45,
                       ),
                       onTap: () {
@@ -218,7 +233,7 @@ class _PollState extends State<Poll> {
                       ? Container()
                       : SizeAnimation(
                           child: Container(
-                            color: Colors.red,
+                            color: Colors.yellow[700],
                             width:
                                 MediaQuery.of(context).size.width * name1Perc,
                             height: 10.0,
@@ -230,8 +245,9 @@ class _PollState extends State<Poll> {
                 fit: StackFit.passthrough,
                 children: <Widget>[
                   Container(
-                    color: Colors.yellow[100],
+                    color: Colors.green[100],
                     child: ListTile(
+                      dense: true,
                       title: Text(
                         "${this.info.name2}",
                         style: TextStyle(fontSize: 18.0),
@@ -246,7 +262,7 @@ class _PollState extends State<Poll> {
                             ? Icons.check_circle
                             : Icons.check_circle_outline,
                         color: this.notifier == Notifier.Yellow
-                            ? Colors.purple[200]
+                            ? Colors.red[300]
                             : Colors.black45,
                       ),
                       onTap: () {
@@ -266,7 +282,7 @@ class _PollState extends State<Poll> {
                       ? Container()
                       : SizeAnimation(
                           child: Container(
-                            color: Colors.yellow[700],
+                            color: Colors.green,
                             width:
                                 MediaQuery.of(context).size.width * name2Perc,
                             height: 10.0,
@@ -280,6 +296,7 @@ class _PollState extends State<Poll> {
                   Container(
                     color: Colors.blue[100],
                     child: ListTile(
+                      dense: true,
                       title: const Text(
                         "Draw",
                         style: TextStyle(fontSize: 18.0),
@@ -294,7 +311,7 @@ class _PollState extends State<Poll> {
                             ? Icons.check_circle
                             : Icons.check_circle_outline,
                         color: this.notifier == Notifier.Blue
-                            ? Colors.purple[200]
+                            ? Colors.red[300]
                             : Colors.black45,
                       ),
                       onTap: () {
@@ -325,8 +342,9 @@ class _PollState extends State<Poll> {
                 fit: StackFit.passthrough,
                 children: <Widget>[
                   Container(
-                    color: Colors.green[100],
+                    color: Colors.grey[100],
                     child: ListTile(
+                      dense: true,
                       title: const Text(
                         "Canceled",
                         style: TextStyle(fontSize: 18.0),
@@ -341,7 +359,7 @@ class _PollState extends State<Poll> {
                             ? Icons.check_circle
                             : Icons.check_circle_outline,
                         color: this.notifier == Notifier.Green
-                            ? Colors.purple[200]
+                            ? Colors.red[200]
                             : Colors.black45,
                       ),
                       onTap: () {
@@ -361,7 +379,7 @@ class _PollState extends State<Poll> {
                       ? Container()
                       : SizeAnimation(
                           child: Container(
-                            color: Colors.green,
+                            color: Colors.grey[600],
                             width:
                                 MediaQuery.of(context).size.width * cancelPerc,
                             height: 10.0,
@@ -372,14 +390,14 @@ class _PollState extends State<Poll> {
             ]),
           ),
           Container(
-            padding: EdgeInsets.only(top: 10.0),
+            padding: EdgeInsets.all(5.0),
             child: GestureDetector(
-              
               child: Text(
                 "View Comments [23]",
                 style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
+                    color: Colors.black87,
                     decoration: TextDecoration.combine([TextDecoration.none])),
               ),
               onTap: () {
@@ -407,31 +425,9 @@ class CreatePoll extends StatefulWidget {
 class _CreatePollState extends State<CreatePoll> {
   @override
   Widget build(BuildContext context) {
+    double topPadding = MediaQuery.of(context).size.height * .125;
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          iconSize: 30.0,
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Container(
-          alignment: Alignment.center,
-          child: Text(
-            "Create Poll",
-            textAlign: TextAlign.center,
-            style: TextStyle(),
-          ),
-        ),
-        actions: <Widget>[
-          IconButton(
-            iconSize: 30.0,
-            icon: Icon(Icons.settings),
-            onPressed: () {},
-          ),
-        ],
-      ),
+      appBar: appBarA(context, "Create Poll", "", true),
       body: Container(
         child: Stack(
           fit: StackFit.expand,
@@ -446,7 +442,8 @@ class _CreatePollState extends State<CreatePoll> {
               top: 0.0,
               bottom: 0.0,
               child: Container(
-                padding: EdgeInsets.only(top: 125.0, left: 55.0, right: 55.0),
+                padding:
+                    EdgeInsets.only(top: topPadding, left: 55.0, right: 55.0),
                 decoration:
                     BoxDecoration(color: Colors.yellow[400].withOpacity(0.95)),
                 child: Form(
