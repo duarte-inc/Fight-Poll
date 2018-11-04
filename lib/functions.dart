@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-
+import 'package:mma_poll/settings.dart';
 // ------------------------- SOME COMMON FUNCTIONS --------------------------
 
 String dateFormaterA(DateTime timeInput) {
@@ -57,8 +57,9 @@ String viewRounderA(int viewInput) {
   return views.toString();
 }
 
-//----------------------------------------------------------------
-Widget appBarA(BuildContext context, String title, String title1, bool status) {
+//-----------------------------AppBar-----------------------------------
+Widget appBarAll(
+    BuildContext context, String title, String title1, bool status) {
   return AppBar(
     leading: new IconButton(
       iconSize: 30.0,
@@ -76,10 +77,32 @@ Widget appBarA(BuildContext context, String title, String title1, bool status) {
         iconSize: 30.0,
         icon: Icon(Icons.settings),
         onPressed: () {
-          print('setting clicked');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Settings(),
+            ),
+          );
         },
         tooltip: 'settings',
       )
     ],
+  );
+}
+
+Widget appBarSettings(BuildContext context, title) {
+  return AppBar(
+    leading: IconButton(
+      iconSize: 30.0,
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    ),
+    title: Container(
+      padding: EdgeInsets.only(right: 44.0),
+      alignment: Alignment.center,
+      child: Text(title),
+    ),
   );
 }

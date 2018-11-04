@@ -14,7 +14,7 @@ class _NotificationCenterState extends State<NotificationCenter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarA(
+      appBar: appBarAll(
         context,
         "Notifications",
         "",

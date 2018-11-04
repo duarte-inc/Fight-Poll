@@ -11,7 +11,7 @@ class _CreatePollState extends State<CreatePoll> {
   Widget build(BuildContext context) {
     double topPadding = MediaQuery.of(context).size.height * .125;
     return Scaffold(
-      appBar: appBarA(context, "Create Poll", "", true),
+      appBar: appBarAll(context, "Create Poll", "", true),
       body: Container(
         child: Stack(
           fit: StackFit.expand,

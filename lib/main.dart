@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mma_poll/feed.dart';
 import 'package:mma_poll/create-poll.dart';
 import 'package:mma_poll/notification.dart';
+import 'package:mma_poll/settings.dart';
 
 void main() => runApp(MyApp());
 
@@ -74,7 +75,12 @@ class _MyHomePageState extends State<MyHomePage> {
             tooltip: 'settings',
             icon: Icon(Icons.settings),
             onPressed: () {
-              print('settings pressed');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Settings(),
+                ),
+              );
             },
           )
         ],

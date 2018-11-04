@@ -18,7 +18,7 @@ class _CommentsState extends State<Comments> {
   Widget build(BuildContext context) {
     return Scaffold(
       //BuildContext context, String title, String title1, bool status, Icon icon
-      appBar: appBarA(
+      appBar: appBarAll(
         context,
         "Comments ",
         "",

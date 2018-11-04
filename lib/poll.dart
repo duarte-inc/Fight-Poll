@@ -125,7 +125,7 @@ class _PollState extends State<Poll> {
     double drawPerc = this.drawNum / total;
     double cancelPerc = this.cancelNum / total;
     return Scaffold(
-      appBar: appBarA(
+      appBar: appBarAll(
         context,
         "Vote",
         "View Poll",
@@ -342,7 +342,7 @@ class _PollState extends State<Poll> {
                 fit: StackFit.passthrough,
                 children: <Widget>[
                   Container(
-                    color: Colors.grey[100],
+                    color: Colors.grey[50],
                     child: ListTile(
                       dense: true,
                       title: const Text(
@@ -379,7 +379,7 @@ class _PollState extends State<Poll> {
                       ? Container()
                       : SizeAnimation(
                           child: Container(
-                            color: Colors.grey[600],
+                            color: Colors.black87,
                             width:
                                 MediaQuery.of(context).size.width * cancelPerc,
                             height: 10.0,
