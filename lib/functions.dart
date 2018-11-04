@@ -100,7 +100,7 @@ Widget appBarSettings(BuildContext context, title) {
       },
     ),
     title: Container(
-      padding: EdgeInsets.only(right: 44.0),
+      padding: EdgeInsets.only(right: 38.0),
       alignment: Alignment.center,
       child: Text(title),
     ),

@@ -37,7 +37,7 @@ class _CreatePollState extends State<CreatePoll> {
                       decoration: InputDecoration(
                         hintText: "Title:",
                         hintStyle: TextStyle(
-                          color: Colors.black,
+                          color: Colors.black54,
                           fontSize: 16.0,
                         ),
                       ),
@@ -50,7 +50,7 @@ class _CreatePollState extends State<CreatePoll> {
                       decoration: InputDecoration(
                         hintText: "Fighter #1:",
                         hintStyle: TextStyle(
-                          color: Colors.black,
+                          color: Colors.black54,
                           fontSize: 16.0,
                         ),
                       ),
@@ -63,7 +63,7 @@ class _CreatePollState extends State<CreatePoll> {
                       decoration: InputDecoration(
                         hintText: "Fighter #2:",
                         hintStyle: TextStyle(
-                          color: Colors.black,
+                          color: Colors.black54,
                           fontSize: 16.0,
                         ),
                       ),

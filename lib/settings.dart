@@ -127,50 +127,130 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
+    double topPadding = MediaQuery.of(context).size.height * .05;
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          iconSize: 30.0,
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Container(
-          padding: EdgeInsets.only(left: 24.0),
-          alignment: Alignment.center,
-          child: Text("Edit profile"),
-        ),
-        actions: <Widget>[save],
-      ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(
-              top: 30.0,
-              left: 45.0,
-              bottom: 30.0,
+      appBar: appBarSettings(context, "Edit profile"),
+      body: Container(
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Image.asset(
+              "assets/images/poll1.png",
+              fit: BoxFit.fitWidth,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 50.0,
-                  backgroundImage: NetworkImage(
-                      'https://twt-media.washtimes.com/media/image/2016/07/06/JonJones.jpg'),
+            Positioned(
+              left: 0.0,
+              right: 0.0,
+              top: 0.0,
+              bottom: 0.0,
+              child: Container(
+                padding:
+                    EdgeInsets.only(top: topPadding, left: 55.0, right: 55.0),
+                decoration:
+                    BoxDecoration(color: Colors.yellow[400].withOpacity(0.95)),
+                child: Form(
+                  child: ListView(children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.only(bottom: 12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(left: 60.0),
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  "http://media.ufc.tv/fighter_images/Daniel_Cormier/CORMIER_DANIEL.png"),
+                              radius: 45.0,
+                            ),
+                          ),
+                          IconButton(
+                            padding: EdgeInsets.only(right: 20.0),
+                            icon: Icon(Icons.add_a_photo),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                    TextFormField(
+                      initialValue: "Danel Cormier",
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        hintText: "Name",
+                        hintStyle: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      onSaved: (String value) {
+                        //Do Something
+                      },
+                    ),
+                    TextFormField(
+                      initialValue: "dc_mma",
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        hintText: "Username",
+                        hintStyle: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      onSaved: (String value) {
+                        //Do Something
+                      },
+                    ),
+                    TextFormField(
+                      initialValue: "dc@dc.com",
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        hintText: "Email",
+                        hintStyle: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      onSaved: (String value) {
+                        //Do Something
+                      },
+                    ),
+                    TextFormField(
+                      initialValue: "I am DC and one of the GOATs",
+                      maxLines: 5,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        hintText: "Bio",
+                        hintStyle: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      onSaved: (String value) {
+                        //Do Something
+                      },
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 15.0),
+                      child: RaisedButton(
+                        padding: EdgeInsets.all(12.0),
+                        child: new Text(
+                          'Save',
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        splashColor: Colors.yellow[600],
+                        color: Colors.yellow[500],
+                        highlightElevation: 6.0,
+                        elevation: 4.0,
+                        onPressed: () {
+                          print("Saved");
+                        },
+                      ),
+                    ),
+                  ]),
                 ),
-                IconButton(
-                  icon: Icon(Icons.add_a_photo),
-                  onPressed: () {},
-                ),
-              ],
+              ),
             ),
-          ),
-          Container(
-            child: Text("data"),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -186,24 +266,91 @@ class ChangePassword extends StatefulWidget {
 class _ChangePasswordState extends State<ChangePassword> {
   @override
   Widget build(BuildContext context) {
+    double topPadding = MediaQuery.of(context).size.height * .05;
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          iconSize: 30.0,
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Container(
-          padding: EdgeInsets.only(left: 24.0),
-          alignment: Alignment.center,
-          child: Text("Password"),
-        ),
-        actions: <Widget>[save],
-      ),
+      appBar: appBarSettings(context, "Password"),
       body: Container(
-        child: Text("Change Password"),
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Image.asset(
+              "assets/images/poll1.png",
+              fit: BoxFit.fitWidth,
+            ),
+            Positioned(
+              left: 0.0,
+              right: 0.0,
+              top: 0.0,
+              bottom: 0.0,
+              child: Container(
+                padding:
+                    EdgeInsets.only(top: topPadding, left: 55.0, right: 55.0),
+                decoration:
+                    BoxDecoration(color: Colors.yellow[400].withOpacity(0.95)),
+                child: Form(
+                  child: ListView(children: <Widget>[
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        hintText: "Current Password",
+                        hintStyle: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      onSaved: (String value) {
+                        //Do Something
+                      },
+                    ),
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        hintText: "New password",
+                        hintStyle: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      onSaved: (String value) {
+                        //Do Something
+                      },
+                    ),
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        hintText: "Retype new password",
+                        hintStyle: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      onSaved: (String value) {
+                        //Do Something
+                      },
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 15.0),
+                      child: RaisedButton(
+                        padding: EdgeInsets.all(12.0),
+                        child: new Text(
+                          'Save',
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        splashColor: Colors.yellow[600],
+                        color: Colors.yellow[500],
+                        highlightElevation: 6.0,
+                        elevation: 4.0,
+                        onPressed: () {
+                          print("Saved");
+                        },
+                      ),
+                    ),
+                  ]),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -219,7 +366,7 @@ class TermsOfUse extends StatelessWidget {
         padding: EdgeInsets.all(20.0),
         child: Text(
           "Some legal stuff regarding its use. Feel free to add some cool stuff here.",
-          style: TextStyle(height: 1.1),
+          style: TextStyle(height: 1.1, color: Colors.black87),
         ),
       ),
     );
@@ -236,21 +383,9 @@ class PrivacyPolicy extends StatelessWidget {
         padding: EdgeInsets.all(20.0),
         child: Text(
           "Some legal stuff regarding the apps privacy. Forexample, you can say, 'the informations we collect will be used/sold to third party business. Or not!' ",
-          style: TextStyle(height: 1.1),
+          style: TextStyle(height: 1.1, color: Colors.black87),
         ),
       ),
     );
   }
 }
-
-Widget save = FlatButton(
-  padding: EdgeInsets.only(left: 15.0),
-  textColor: Colors.blueAccent,
-  onPressed: () {
-    print("Save");
-  },
-  child: Text(
-    "Save",
-    style: TextStyle(fontSize: 16.0),
-  ),
-);
