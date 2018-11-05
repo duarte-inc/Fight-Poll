@@ -342,7 +342,7 @@ class _PollState extends State<Poll> {
                 fit: StackFit.passthrough,
                 children: <Widget>[
                   Container(
-                    color: Colors.grey[50],
+                    color: Colors.grey[100],
                     child: ListTile(
                       dense: true,
                       title: const Text(

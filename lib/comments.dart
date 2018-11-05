@@ -24,15 +24,56 @@ class _CommentsState extends State<Comments> {
         "",
         true,
       ),
-      body: Container(
-        child: ListView.builder(
-          itemCount: comments.length,
-          itemBuilder: (context, index) {
-            return CommentCard(
-              comment: comments[index],
-            );
-          },
-        ),
+      body: Stack(
+        children: <Widget>[
+          Container(
+            child: ListView.builder(
+              itemCount: comments.length,
+              itemBuilder: (context, index) {
+                return CommentCard(
+                  comment: comments[index],
+                );
+              },
+            ),
+          ),
+          Positioned(
+            left: 0.0,
+            right: 0.0,
+            bottom: 0.0,
+            child: Material(
+              elevation: 5.0,
+              color: Colors.white,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextFormField(
+                        // maxLines: 50,
+                        maxLengthEnforced: true,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          labelText: " comment...",
+                          labelStyle:
+                              TextStyle(color: Colors.grey, fontSize: 13.0),
+                          isDense: true,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.send,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -107,103 +148,99 @@ class _CommentCardState extends State<CommentCard> {
 
   @override
   Widget build(BuildContext context) {
-    const double pad = 15.0;
+    const double pad = 10.0;
     return Container(
       child: Card(
         elevation: 0.0,
-        margin:
-            const EdgeInsets.only(top: 0.0, left: pad, right: pad, bottom: 0.0),
+        margin: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Column(
           children: <Widget>[
             Column(
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(0.0),
-                  child: Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: pad),
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(avatar),
-                          radius: 25.0,
-                        ),
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: pad),
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(avatar),
+                        radius: 20.0,
                       ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  left: pad, right: pad, top: pad),
-                              child: Text(
-                                "${this.username}",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 17.8,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: pad, right: pad, top: pad),
+                            child: Text(
+                              "${this.username}",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 17.0,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: pad),
-                              child: Text(
-                                "${this.date}",
-                                style: TextStyle(
-                                    color: Colors.grey[700], fontSize: 14.0),
-                              ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: pad),
+                            child: Text(
+                              "${this.date}",
+                              style: TextStyle(
+                                  color: Colors.grey[600], fontSize: 13.0),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.only(
-                      left: 66.0, top: 2.0, bottom: 0.0, right: 6.0),
+                      left: 51.0, top: 3.0, bottom: 0.0, right: 0.0),
                   child: Column(
                     children: <Widget>[
                       Text(
                         "${this.comment}",
                         style: TextStyle(
-                          fontSize: 15.5,
+                          fontSize: 14.0,
+                          height: 1.07,
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(0.0),
+                        padding: EdgeInsets.zero,
                         child: Row(
                           children: <Widget>[
                             Container(
-                              padding: EdgeInsets.only(top: 5.0),
+                              padding: EdgeInsets.only(top: 6.0),
                               child: Text(
                                 "${this.likes}",
                                 style: TextStyle(),
                               ),
                             ),
                             IconButton(
-                              onPressed: () {print('thumb down');},
+                              onPressed: () {},
                               icon: Icon(Icons.thumb_up),
                             ),
                             IconButton(
-                              onPressed: () {print('thumb up');},
+                              onPressed: () {},
                               icon: Icon(Icons.thumb_down),
                             ),
                             Expanded(
                               child: Container(
-                                padding: EdgeInsets.only(right: 12.0),
                                 alignment: Alignment.centerRight,
-                                child: GestureDetector(
+                                child: FlatButton(
+                                  onPressed: () {
+                                    print("reply");
+                                  },
                                   child: Text(
                                     "Reply",
                                     style: TextStyle(
-                                      fontSize: 16.0,
+                                      fontSize: 13.0,
                                       color: Colors.orange[900],
                                     ),
                                   ),
-                                  onTap: () {
-                                    print('reply');
-                                  },
                                 ),
                               ),
                             ),

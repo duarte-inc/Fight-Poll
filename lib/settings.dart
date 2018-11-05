@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/functions.dart';
-
+import 'package:mma_poll/auth.dart';
 class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -103,7 +103,12 @@ class Settings extends StatelessWidget {
                     child: FlatButton(
                       textColor: Colors.blueAccent,
                       onPressed: () {
-                        print("log out");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Login(),
+                          ),
+                        );
                       },
                       child: Text("Log out"),
                     ),
@@ -166,7 +171,7 @@ class _EditProfileState extends State<EditProfile> {
                           IconButton(
                             padding: EdgeInsets.only(right: 20.0),
                             icon: Icon(Icons.add_a_photo),
-                            onPressed: () {},
+                            onPressed: () {print("icon button");},
                           ),
                         ],
                       ),
