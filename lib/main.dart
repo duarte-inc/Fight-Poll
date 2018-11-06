@@ -61,6 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: 'Search...',
+            hintStyle: TextStyle(fontSize: 15.0),
+            isDense: true,
           ),
           textAlign: TextAlign.start,
           style: TextStyle(

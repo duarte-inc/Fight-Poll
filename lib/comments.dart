@@ -48,14 +48,15 @@ class _CommentsState extends State<Comments> {
                 child: Row(
                   children: <Widget>[
                     Expanded(
-                      child: TextFormField(
+                      child: TextField(
                         // maxLines: 50,
                         maxLengthEnforced: true,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          labelText: " comment...",
-                          labelStyle:
-                              TextStyle(color: Colors.grey, fontSize: 13.0),
+                          hintText: 'comment...',
+                          hintStyle: TextStyle(
+                            fontSize: 13.0
+                          ),
                           isDense: true,
                         ),
                       ),
