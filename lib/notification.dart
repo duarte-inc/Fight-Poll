@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/functions.dart';
-import 'package:mma_poll/database.dart';
 import 'package:mma_poll/model.dart';
 // Notifies when a poll you have created is closed. The thumbnail image in square will be shown
 // Also will notify when someone tags you in a comment. Profile image in circle avatar will be displayed

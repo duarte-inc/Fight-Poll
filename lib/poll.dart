@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/comments.dart';
 import 'package:mma_poll/model.dart';
-import 'package:mma_poll/database.dart';
 import 'package:mma_poll/animation.dart';
 import 'package:mma_poll/functions.dart';
 

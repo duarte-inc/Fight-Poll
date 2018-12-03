@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/functions.dart';
-import 'package:mma_poll/database.dart';
 import 'package:mma_poll/model.dart';
 
 class Comments extends StatefulWidget {
@@ -81,7 +80,7 @@ class _CommentsState extends State<Comments> {
 }
 
 class CommentCard extends StatefulWidget {
-  final Comment comment;
+  final CommentModel comment;
 
   CommentCard({this.comment});
 
@@ -94,11 +93,11 @@ class _CommentCardState extends State<CommentCard> {
 
   String _getAvatar() {
     for (int i = 0; i < comments.length; i++) {
-      Comment comment = comments[i];
+      CommentModel comment = comments[i];
       if (widget.comment.id == comment.id) {
         for (int j = 0; j < users.length; j++) {
-          User user = users[j];
-          if (comment.userId == user.id) {
+          AccountModel user = users[j];
+          if (comment.commentCreatorId == user.id) {
             String userPic = users[j].pic;
             return userPic;
           }
@@ -109,7 +108,7 @@ class _CommentCardState extends State<CommentCard> {
   }
 
   String _getDate() {
-    return dateFormaterA(widget.comment.date);
+    return dateFormaterA(widget.comment.createdDate);
   }
 
   String _getLikes() {
@@ -118,11 +117,11 @@ class _CommentCardState extends State<CommentCard> {
 
   String _getUsername() {
     for (int i = 0; i < comments.length; i++) {
-      Comment comment = comments[i];
+      CommentModel comment = comments[i];
       if (widget.comment.id == comment.id) {
         for (int j = 0; j < users.length; j++) {
-          User user = users[j];
-          if (comment.userId == user.id) {
+          AccountModel user = users[j];
+          if (comment.commentCreatorId == user.id) {
             String username = users[j].username;
             return username;
           }
@@ -138,7 +137,7 @@ class _CommentCardState extends State<CommentCard> {
     this.avatar = this._getAvatar();
     this.username = this._getUsername();
     this.date = this._getDate();
-    this.comment = widget.comment.comment;
+    this.comment = widget.comment.info;
     this.likes = this._getLikes();
   }
 

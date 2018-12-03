@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/functions.dart';
-import 'package:mma_poll/auth.dart';
+import 'package:mma_poll/account.dart';
+
 class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -171,7 +172,9 @@ class _EditProfileState extends State<EditProfile> {
                           IconButton(
                             padding: EdgeInsets.only(right: 20.0),
                             icon: Icon(Icons.add_a_photo),
-                            onPressed: () {print("icon button");},
+                            onPressed: () {
+                              print("icon button");
+                            },
                           ),
                         ],
                       ),

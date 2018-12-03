@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mma_poll/database.dart';
 import 'package:mma_poll/model.dart';
 import 'package:mma_poll/poll.dart';
 
@@ -46,7 +45,7 @@ class _FeedState extends State<Feed> {
 }
 
 class FightCard extends StatefulWidget {
-  final Info infos;
+  final PollModel infos;
 
   FightCard({this.infos});
 
@@ -57,7 +56,7 @@ class FightCard extends StatefulWidget {
 class _FightCardState extends State<FightCard> {
   bool status;
   String name1, name2;
-  FightPoll poll;
+  PollModel poll;
 
   @override
   void initState() {
@@ -65,16 +64,16 @@ class _FightCardState extends State<FightCard> {
     //bool
     this.status = widget.infos.status;
     //string
-    this.name1 = widget.infos.name1;
-    this.name2 = widget.infos.name2;
+    this.name1 = widget.infos.fighter1;
+    this.name2 = widget.infos.fighter2;
     //poll
     this.poll = this._getPoll();
   }
 
-  FightPoll _getPoll() {
+  PollModel _getPoll() {
     for (int i = 0; i < polls.length; i++) {
-      FightPoll poll = polls[i];
-      if (poll.id == widget.infos.pollId) {
+      PollModel poll = polls[i];
+      if (poll.id == widget.infos.id) {
         return poll;
       }
     }

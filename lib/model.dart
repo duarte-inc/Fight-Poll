@@ -1,105 +1,153 @@
-//-----------------FIGHT INFO------------------
-class Info {
+//-----------------Account--------------
+class AccountModel {
   final int id;
-  final int userId;
-  final int pollId; //this is for the numbers
-  final String title, pic, name1, name2;
-  final DateTime postedDate;
-  final bool status; //closed or not
-
-  Info({
-    this.id,
-    this.pollId,
-    this.userId,
-    this.title,
-    this.pic,
-    this.postedDate,
-    this.name1,
-    this.name2,
-    this.status,
-  });
-}
-
-//------------------FIGHT POLL-----------------
-class FightPoll {
-  final int id, userId;
-  final int drawNum, name1Num, name2Num, canceledNum;
-
-  FightPoll({
-    this.id,
-    this.userId, //to get the person who created the poll
-    this.drawNum,
-    this.name2Num,
-    this.name1Num,
-    this.canceledNum,
-  });
-}
-
-// -----------------USER MODEL----------------
-class User {
-  final int id;
+  final String name;
   final String email;
   final String username;
-  final String pic;
   final String password;
+  final DateTime createdDate;
+  final String profileInfo;
+  final String profileImage;
 
-  User({
+  AccountModel({
     this.id,
+    this.name,
     this.email,
     this.username,
-    this.pic,
     this.password,
+    this.createdDate,
+    this.profileInfo,
+    this.profileImage,
   });
+
+  factory AccountModel.fromJson(Map<String, dynamic> json) {
+    return AccountModel(
+      id: json['account_id'],
+      name: json['account_name'],
+      email: json['account_email'],
+      username: json['account_username'],
+      password: json['account_password'],
+      createdDate: json['account_created_date'],
+      profileInfo: json['account_profile_info'],
+      profileImage: json['account_profile_image'],
+    );
+  }
 }
 
-//------------------COMMENTS MODEL------------
-class Comment {
+//-----------------Poll-----------------
+class PollModel {
   final int id;
-  final int userId; //the person who created the comment
-  final DateTime date;
-  final String comment;
+  final int creatorId;
+  final List<int> votersIds;
+  final String title;
+  final DateTime createdDate;
+  final String fighter1;
+  final String fighter2;
+  final String image;
+  final bool status;
+  final int votesForFighter1;
+  final int votesForFighter2;
+  final int votesForDraw;
+  final int votesForCanceled;
+  final int view;
+
+  PollModel({
+    this.id,
+    this.creatorId,
+    this.votersIds,
+    this.title,
+    this.createdDate,
+    this.fighter1,
+    this.fighter2,
+    this.image,
+    this.status,
+    this.votesForFighter1,
+    this.votesForFighter2,
+    this.votesForDraw,
+    this.votesForCanceled,
+    this.view,
+  });
+
+  factory PollModel.fromJson(Map<String, dynamic> json) {
+    return PollModel(
+      id: json['poll_id'],
+      creatorId: json['poll_creator_id'],
+      votersIds: json['poll_voters_ids'],
+      title: json['poll_title'],
+      createdDate: json['poll_created_date'],
+      fighter1: json['poll_fighter1'],
+      fighter2: json['poll_fighter2'],
+      image: json['poll_image'],
+      status: json['poll_status'],
+      votesForFighter1: json['poll_votes_for_fighter1'],
+      votesForFighter2: json['poll_votes_for_fighter2'],
+      votesForDraw: json['poll_votes_for_draw'],
+      votesForCanceled: json['poll_votes_for_canceled'],
+      view: json['view'],
+    );
+  }
+}
+//-----------------Comment--------------
+
+class CommentModel {
+  final int id;
+  final int parentCommentId;
+  final int replyId;
+  final int creatorId;
+  final DateTime createdDate;
+  final String info;
   final int likes;
 
-  Comment({
+  CommentModel({
     this.id,
-    this.userId,
-    this.comment,
-    this.date,
+    this.parentCommentId,
+    this.replyId,
+    this.creatorId,
+    this.createdDate,
+    this.info,
     this.likes,
   });
+
+  factory CommentModel.fromJson(Map<String, dynamic> json) {
+    return CommentModel(
+      id: json['comment_id'],
+      parentCommentId: json['parent_comment_id'],
+      replyId: json['reply_id'],
+      creatorId: json['comment_creator_account_id'],
+      createdDate: json['comment_created_date'],
+      info: json['comment_info'],
+      likes: json['comment_likes'],
+    );
+  }
 }
 
-//----------------Info NOTIFICATION MODEL-----------
-class InfoNotification {
+//--------------Notification----------
+
+class NotificationModel {
   final int id;
-  final int infoId; //To get the poll names and creator pf the poll
-  final int recieverUserId; //the user recieving the notification
-  final DateTime date;
-
-  InfoNotification({
-    this.id,
-    this.infoId,
-    this.recieverUserId,
-    this.date,
-  });
-}
-
-//-------------Reply Notification-----------------
-
-class ReplyNotification {
-  final int id;
-  final int commentId; // so we can insert the reply at this comment
-  final int senderUserId;
-  final int infoId;
-  final DateTime date;
+  final int toUserId;
+  final int fromUserId;
   final String message;
+  final DateTime createdDate;
+  final bool isRead;
 
-  ReplyNotification({
+  NotificationModel({
     this.id,
-    this.commentId,
-    this.senderUserId,
-    this.infoId,
-    this.date,
+    this.toUserId,
+    this.fromUserId,
     this.message,
+    this.createdDate,
+    this.isRead,
   });
+
+  factory NotificationModel.fromJson(Map<String, dynamic> json) {
+    return NotificationModel(
+      id: json['notification_id'],
+      toUserId: json['notification_to_user_id'],
+      fromUserId: json['notification_from_id'],
+      message: json['notification_message'],
+      createdDate: json['notification_created_date'],
+      isRead: json['notification_read'],
+    );
+  }
 }
