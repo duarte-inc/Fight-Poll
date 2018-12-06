@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/functions.dart';
 import 'package:mma_poll/model.dart';
+import 'package:mma_poll/_service.dart';
 
 class Comments extends StatefulWidget {
   @override
@@ -16,66 +17,102 @@ class _CommentsState extends State<Comments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //BuildContext context, String title, String title1, bool status, Icon icon
-      appBar: appBarAll(
-        context,
-        "Comments ",
-        "",
-        true,
-      ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            child: ListView.builder(
-              itemCount: comments.length,
-              itemBuilder: (context, index) {
-                return CommentCard(
-                  comment: comments[index],
-                );
-              },
-            ),
-          ),
-          Positioned(
-            left: 0.0,
-            right: 0.0,
-            bottom: 0.0,
-            child: Material(
-              elevation: 5.0,
-              color: Colors.white,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: TextField(
-                        // maxLines: 50,
-                        maxLengthEnforced: true,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'comment...',
-                          hintStyle: TextStyle(
-                            fontSize: 13.0
+        //BuildContext context, String title, String title1, bool status, Icon icon
+        appBar: appBarAll(
+          context,
+          "Comments ",
+          "",
+          true,
+        ),
+        body: Container(
+          color: Colors.yellow[50],
+          child: FutureBuilder<List<CommentModel>>(
+            future: getParentComments(),
+            builder: (BuildContext context,
+                AsyncSnapshot<List<CommentModel>> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  return Container(
+                    color: Colors.yellow[50],
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: Container(
+                      width: 50.0,
+                      height: 50.0,
+                      padding: EdgeInsets.all(30.0),
+                      alignment: Alignment.topCenter,
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.black,
+                      ),
+                    ),
+                  );
+                case ConnectionState.done:
+                  if (snapshot.hasError) {
+                    return Center(
+                      child:
+                          Text("Sorry, we are having issues with our servers"),
+                    );
+                  } else if (snapshot.hasData) {
+                    //Todo
+                    return Container(
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            child: ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                return CommentCard(
+                                  comment: snapshot.data[index],
+                                );
+                              },
+                            ),
                           ),
-                          isDense: true,
-                        ),
+                          Positioned(
+                            left: 0.0,
+                            right: 0.0,
+                            bottom: 0.0,
+                            child: Material(
+                              elevation: 5.0,
+                              color: Colors.white,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: TextField(
+                                        // maxLines: 50,
+                                        maxLengthEnforced: true,
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: 'comment...',
+                                          hintStyle: TextStyle(fontSize: 13.0),
+                                          isDense: true,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.send,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                    ),
-                    Container(
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.send,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+                    );
+                  }
+              }
+            },
+          ),
+        ));
   }
 }
 
@@ -89,56 +126,17 @@ class CommentCard extends StatefulWidget {
 }
 
 class _CommentCardState extends State<CommentCard> {
-  String comment, avatar, username, date, likes;
-
-  String _getAvatar() {
-    for (int i = 0; i < comments.length; i++) {
-      CommentModel comment = comments[i];
-      if (widget.comment.id == comment.id) {
-        for (int j = 0; j < users.length; j++) {
-          AccountModel user = users[j];
-          if (comment.commentCreatorId == user.id) {
-            String userPic = users[j].pic;
-            return userPic;
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  String _getDate() {
-    return dateFormaterA(widget.comment.createdDate);
-  }
-
-  String _getLikes() {
-    return viewRounderA(widget.comment.likes);
-  }
-
-  String _getUsername() {
-    for (int i = 0; i < comments.length; i++) {
-      CommentModel comment = comments[i];
-      if (widget.comment.id == comment.id) {
-        for (int j = 0; j < users.length; j++) {
-          AccountModel user = users[j];
-          if (comment.commentCreatorId == user.id) {
-            String username = users[j].username;
-            return username;
-          }
-        }
-      }
-    }
-    return null;
-  }
+  int _likes;
+  String _info;
+  DateTime _cratedDate;
+  AccountModel _account;
 
   @override
   void initState() {
     super.initState();
-    this.avatar = this._getAvatar();
-    this.username = this._getUsername();
-    this.date = this._getDate();
-    this.comment = widget.comment.info;
-    this.likes = this._getLikes();
+    this._likes = widget.comment.likes;
+    this._info = widget.comment.info;
+    this._cratedDate = widget.comment.createdDate;
   }
 
   @override
@@ -162,7 +160,8 @@ class _CommentCardState extends State<CommentCard> {
                     Padding(
                       padding: EdgeInsets.only(top: pad),
                       child: CircleAvatar(
-                        backgroundImage: NetworkImage(avatar),
+                        backgroundImage:
+                            NetworkImage(this._account.profileImage),
                         radius: 20.0,
                       ),
                     ),
@@ -174,7 +173,7 @@ class _CommentCardState extends State<CommentCard> {
                             padding: EdgeInsets.only(
                                 left: pad, right: pad, top: pad),
                             child: Text(
-                              "${this.username}",
+                              "${this._account.username}",
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 17.0,
@@ -185,7 +184,7 @@ class _CommentCardState extends State<CommentCard> {
                           Padding(
                             padding: EdgeInsets.only(left: pad),
                             child: Text(
-                              "${this.date}",
+                              "${this._cratedDate}",
                               style: TextStyle(
                                   color: Colors.grey[600], fontSize: 13.0),
                             ),
@@ -202,7 +201,7 @@ class _CommentCardState extends State<CommentCard> {
                   child: Column(
                     children: <Widget>[
                       Text(
-                        "${this.comment}",
+                        "${this._info}",
                         style: TextStyle(
                           fontSize: 14.0,
                           height: 1.07,
@@ -215,7 +214,7 @@ class _CommentCardState extends State<CommentCard> {
                             Container(
                               padding: EdgeInsets.only(top: 6.0),
                               child: Text(
-                                "${this.likes}",
+                                "${this._likes}",
                                 style: TextStyle(),
                               ),
                             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/model.dart';
 import 'package:mma_poll/poll.dart';
+import 'package:mma_poll/_service.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -9,75 +10,93 @@ class Feed extends StatefulWidget {
 
 class _FeedState extends State<Feed> {
   @override
+  void initState() {
+    super.initState();
+    getPolls().then((j) {
+      print(j);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.yellow[50],
-      child: infos == null
-          ? Container(
-              color: Colors.yellow[50],
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Container(
-                width: 50.0,
-                height: 50.0,
-                padding: EdgeInsets.all(30.0),
-                alignment: Alignment.topCenter,
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.black,
+      child: FutureBuilder<List<PollModel>>(
+        future: getPolls(),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<PollModel>> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.active:
+            case ConnectionState.waiting:
+              return Container(
+                color: Colors.yellow[50],
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Container(
+                  width: 50.0,
+                  height: 50.0,
+                  padding: EdgeInsets.all(30.0),
+                  alignment: Alignment.topCenter,
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.black,
+                  ),
                 ),
-              ),
-            )
-          : ListView.builder(
-              padding: EdgeInsets.only(top: 5.0),
-              itemCount: infos.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  children: <Widget>[
-                    FightCard(
-                      infos: infos[index],
-                    ),
-                  ],
+              );
+            case ConnectionState.done:
+              if (snapshot.hasError) {
+                print(snapshot.error);
+                return Center(
+                  child: Text("Sorry, we are having issues with our servers"),
                 );
-              },
-            ),
+              } else if (snapshot.hasData) {
+                return ListView.builder(
+                  padding: EdgeInsets.only(top: 5.0),
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
+                      children: <Widget>[
+                        FightCard(
+                          poll: snapshot.data[index],
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+          }
+        },
+      ),
     );
   }
 }
 
 class FightCard extends StatefulWidget {
-  final PollModel infos;
+  final PollModel poll;
 
-  FightCard({this.infos});
+  FightCard({this.poll});
 
   @override
   _FightCardState createState() => _FightCardState();
 }
 
 class _FightCardState extends State<FightCard> {
-  bool status;
-  String name1, name2;
-  PollModel poll;
+  int _votesForFighter1, _votesForFighter2, _votesForDraw, _votesForCanceled;
+  bool _status;
+  String _title, _fighter1, _fighter2, _image;
 
   @override
   void initState() {
     super.initState();
-    //bool
-    this.status = widget.infos.status;
-    //string
-    this.name1 = widget.infos.fighter1;
-    this.name2 = widget.infos.fighter2;
-    //poll
-    this.poll = this._getPoll();
-  }
-
-  PollModel _getPoll() {
-    for (int i = 0; i < polls.length; i++) {
-      PollModel poll = polls[i];
-      if (poll.id == widget.infos.id) {
-        return poll;
-      }
-    }
-    return null;
+    this._status = widget.poll.status;
+    this._title = widget.poll.title;
+    this._fighter1 = widget.poll.fighter1;
+    this._fighter2 = widget.poll.fighter2;
+    this._votesForFighter1 = widget.poll.votesForFighter1;
+    this._votesForFighter2 = widget.poll.votesForFighter2;
+    this._votesForDraw = widget.poll.votesForDraw;
+    this._votesForCanceled = widget.poll.votesForCanceled;
+    this._image = widget.poll.image;
   }
 
   @override
@@ -86,11 +105,6 @@ class _FightCardState extends State<FightCard> {
   }
 
   Widget _cardInfo() {
-    int name1Num = this.poll.name1Num;
-    int name2Num = this.poll.name2Num;
-    int drawNum = this.poll.drawNum;
-    int canceledNum = this.poll.canceledNum;
-
     return Column(
       children: <Widget>[
         Padding(
@@ -99,7 +113,7 @@ class _FightCardState extends State<FightCard> {
             left: 20.0,
           ),
           child: Text(
-            widget.infos.title,
+            _title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.start,
@@ -138,7 +152,7 @@ class _FightCardState extends State<FightCard> {
                     ),
                   ),
                   Text(
-                    "$drawNum",
+                    "$_votesForDraw",
                     style: TextStyle(color: Colors.white),
                   ),
                 ]),
@@ -148,13 +162,13 @@ class _FightCardState extends State<FightCard> {
                   Padding(
                     padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
                     child: Text(
-                      "$name1",
+                      "$_fighter1",
                       style: TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                   Text(
-                    "$name1Num",
+                    "$_votesForFighter1",
                     style: TextStyle(color: Colors.white),
                   ),
                 ]),
@@ -164,13 +178,13 @@ class _FightCardState extends State<FightCard> {
                   Padding(
                     padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
                     child: Text(
-                      "$name2",
+                      "$_fighter2",
                       style: TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                   Text(
-                    "$name2Num",
+                    "$_votesForFighter2",
                     style: TextStyle(color: Colors.white),
                   ),
                 ]),
@@ -186,7 +200,7 @@ class _FightCardState extends State<FightCard> {
                     ),
                   ),
                   Text(
-                    "$canceledNum",
+                    "$_votesForCanceled",
                     style: TextStyle(color: Colors.white),
                   ),
                 ]),
@@ -209,7 +223,7 @@ class _FightCardState extends State<FightCard> {
             context,
             MaterialPageRoute(
               builder: (context) => Poll(
-                    widget.infos.id,
+                    widget.poll.id,
                   ),
             ),
           );
@@ -235,7 +249,7 @@ class _FightCardState extends State<FightCard> {
                 fit: StackFit.expand,
                 children: <Widget>[
                   Image.network(
-                    widget.infos.pic,
+                    _image,
                     fit: BoxFit.cover,
                   ),
                   Positioned(
@@ -267,7 +281,7 @@ class _FightCardState extends State<FightCard> {
                                       padding: EdgeInsets.all(5.0),
                                       color: Colors.black,
                                       child: Text(
-                                        status ? "Open" : "Closed",
+                                        _status ? "Open" : "Closed",
                                         textAlign: TextAlign.start,
                                         style: TextStyle(color: Colors.white),
                                       ),

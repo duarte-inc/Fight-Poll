@@ -17,7 +17,7 @@ String _deviceUniqueId = "";
 const String _tokenKey = "token";
 
 //Server url
-const String _serverUrl = 'http://10.159.133.152:3000';
+const String _serverUrl = 'http://10.159.134.114:3000'; //10.159.133.152
 
 //Note final, its init only once
 final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
@@ -60,15 +60,6 @@ Future<bool> saveDeviceToken(String token) async {
 
 //--------------HTTP Communication by order------------
 
-//Account
-//Poll
-//Comments
-//Notifications
-
-//Order: p,u,g,d
-
-//--------> Account-------->Account------->Account------>
-
 //---Posts
 Future<Map<String, dynamic>> register(Map<String, dynamic> post) async {
   dynamic data;
@@ -89,8 +80,6 @@ Future<Map<String, dynamic>> register(Map<String, dynamic> post) async {
 
     if (response.statusCode == 200) {
       data = jsonDecode(response.body);
-    } else {
-      data = null;
     }
   } catch (error) {
     throw error;
@@ -117,6 +106,34 @@ Future<Map<String, dynamic>> login(Map<String, dynamic> post) async {
 
     if (response.statusCode == 200) {
       //User id and token are recieved here. Store them if they do exist
+      data = jsonDecode(response.body);
+    } else {
+      data = null;
+    }
+  } catch (error) {
+    throw error;
+  }
+  return data;
+}
+
+Future<Map<String, dynamic>> createPoll(Map<String, dynamic> post) async {
+  dynamic data;
+  try {
+    String _deviceId = await _getDeviceId();
+    String _token = await _getDeviceToken();
+    //server res
+    final http.Response response = await http.post(
+      _serverUrl + '/auth/create-poll',
+      headers: {
+        'device-id': _deviceId,
+        'token': _token,
+        'app-id': _applicationUniqueId,
+        'Accept': 'application/json'
+      },
+      body: post,
+    );
+
+    if (response.statusCode == 200) {
       data = jsonDecode(response.body);
     } else {
       data = null;
@@ -186,62 +203,6 @@ Future<Map<String, dynamic>> editProfile(
   return data;
 }
 
-//---Get
-
-Future<AccountModel> viewProfile(int id) async {
-  AccountModel user;
-  try {
-    String _deviceId = await _getDeviceId();
-    String _token = await _getDeviceToken();
-    final http.Response response =
-        await http.get(_serverUrl + '/auth/users/$id', headers: {
-      "device-id": _deviceId,
-      "token": _token,
-      "app-id": _applicationUniqueId,
-    });
-    if (response.statusCode == 200) {
-      dynamic json = jsonDecode(response.body);
-      user = AccountModel.fromJson(json);
-    }
-  } catch (error) {
-    throw error;
-  }
-  return user;
-}
-
-//--------> Poll-------->Poll------->Poll------>
-
-//---Posts
-Future<Map<String, dynamic>> createPoll(Map<String, dynamic> post) async {
-  dynamic data;
-  try {
-    String _deviceId = await _getDeviceId();
-    String _token = await _getDeviceToken();
-    //server res
-    final http.Response response = await http.post(
-      _serverUrl + '/auth/create-poll',
-      headers: {
-        'device-id': _deviceId,
-        'token': _token,
-        'app-id': _applicationUniqueId,
-        'Accept': 'application/json'
-      },
-      body: post,
-    );
-
-    if (response.statusCode == 200) {
-      data = jsonDecode(response.body);
-    } else {
-      data = null;
-    }
-  } catch (error) {
-    throw error;
-  }
-  return data;
-}
-
-//---Updates
-
 Future<Map<String, dynamic>> vote(
     Map<String, dynamic> update, int pollId) async {
   dynamic data;
@@ -301,8 +262,30 @@ Future<Map<String, dynamic>> closePoll(
 }
 
 //---Get
-Future<PollModel> getPolls() async {
-  PollModel poll;
+
+Future<AccountModel> viewProfile(int id) async {
+  AccountModel user;
+  try {
+    String _deviceId = await _getDeviceId();
+    String _token = await _getDeviceToken();
+    final http.Response response =
+        await http.get(_serverUrl + '/auth/users/$id', headers: {
+      "device-id": _deviceId,
+      "token": _token,
+      "app-id": _applicationUniqueId,
+    });
+    if (response.statusCode == 200) {
+      dynamic json = jsonDecode(response.body);
+      user = AccountModel.fromJson(json['result']);
+    }
+  } catch (error) {
+    throw error;
+  }
+  return user;
+}
+
+Future<List<PollModel>> getPolls() async {
+  List<PollModel> polls = new List();
   try {
     String _deviceId = await _getDeviceId();
     String _token = await _getDeviceToken();
@@ -314,12 +297,51 @@ Future<PollModel> getPolls() async {
     });
     if (response.statusCode == 200) {
       dynamic json = jsonDecode(response.body);
-      poll = PollModel.fromJson(json);
+      if (json['success']) {
+        for (dynamic j in json['result']) {
+          PollModel poll = PollModel.fromJson(j);
+          polls.add(poll);
+        }
+      } else {
+        PollModel poll = PollModel.fromJson(json['result']);
+        polls.add(poll);
+      }
     }
   } catch (error) {
     throw error;
   }
-  return poll;
+
+  return polls;
+}
+
+Future<List<NotificationModel>> getNotifications(int userId) async {
+  List<NotificationModel> notifications = new List();
+  try {
+    String _deviceId = await _getDeviceId();
+    String _token = await _getDeviceToken();
+    final http.Response response =
+        await http.get(_serverUrl + '/notifications/$userId', headers: {
+      "device-id": _deviceId,
+      "token": _token,
+      "app-id": _applicationUniqueId,
+    });
+    if (response.statusCode == 200) {
+      dynamic json = jsonDecode(response.body);
+      if (json['success'])
+        for (dynamic j in json['result']) {
+          NotificationModel notification = NotificationModel.fromJson(j);
+          notifications.add(notification);
+        }
+      else {
+        NotificationModel notification =
+            NotificationModel.fromJson(json['result']);
+        notifications.add(notification);
+      }
+    }
+  } catch (error) {
+    throw error;
+  }
+  return notifications;
 }
 
 Future<PollModel> getPoll(int pollId) async {
@@ -343,100 +365,8 @@ Future<PollModel> getPoll(int pollId) async {
   return poll;
 }
 
-//-------->Comment-------->Comment------->Comment------>
-
-//---Posts
-
-Future<Map<String, dynamic>> postReply(Map<String, dynamic> post) async {
-  dynamic data;
-  try {
-    String _deviceId = await _getDeviceId();
-    String _token = await _getDeviceToken();
-    //server res
-    final http.Response response = await http.post(
-      _serverUrl + '/auth/create-poll',
-      headers: {
-        'device-id': _deviceId,
-        'token': _token,
-        'app-id': _applicationUniqueId,
-        'Accept': 'application/json'
-      },
-      body: post,
-    );
-
-    if (response.statusCode == 200) {
-      data = jsonDecode(response.body);
-    } else {
-      data = null;
-    }
-  } catch (error) {
-    throw error;
-  }
-  return data;
-}
-
-Future<Map<String, dynamic>> postParentComment(
-    Map<String, dynamic> post) async {
-  dynamic data;
-  try {
-    String _deviceId = await _getDeviceId();
-    String _token = await _getDeviceToken();
-    //server res
-    final http.Response response = await http.post(
-      _serverUrl + '/auth/post-parent-comment',
-      headers: {
-        'device-id': _deviceId,
-        'token': _token,
-        'app-id': _applicationUniqueId,
-        'Accept': 'application/json'
-      },
-      body: post,
-    );
-
-    if (response.statusCode == 200) {
-      data = jsonDecode(response.body);
-    } else {
-      data = null;
-    }
-  } catch (error) {
-    throw error;
-  }
-  return data;
-}
-//---Updates
-
-Future<Map<String, dynamic>> likeAComment(
-    Map<String, dynamic> update, int commentId) async {
-  dynamic data;
-  try {
-    String _deviceId = await _getDeviceId();
-    String _token = await _getDeviceToken();
-    //server res
-    final http.Response response = await http.put(
-      _serverUrl + '/auth/all-comments/:$commentId/like',
-      headers: {
-        'device-id': _deviceId,
-        'token': _token,
-        'app-id': _applicationUniqueId,
-        'Accept': 'application/json'
-      },
-      body: update,
-    );
-
-    if (response.statusCode == 200) {
-      data = jsonDecode(response.body);
-    } else {
-      data = null;
-    }
-  } catch (error) {
-    throw error;
-  }
-  return data;
-}
-
-//---Gets
-Future<CommentModel> getParentComment() async {
-  CommentModel poll;
+Future<List<CommentModel>> getParentComments() async {
+  List<CommentModel> comments = new List();
   try {
     String _deviceId = await _getDeviceId();
     String _token = await _getDeviceToken();
@@ -448,12 +378,20 @@ Future<CommentModel> getParentComment() async {
     });
     if (response.statusCode == 200) {
       dynamic json = jsonDecode(response.body);
-      poll = CommentModel.fromJson(json);
+      if (json['success'])
+        for (dynamic j in json['result']) {
+          CommentModel comment = CommentModel.fromJson(j);
+          comments.add(comment);
+        }
+      else {
+        CommentModel comment = CommentModel.fromJson(json['result']);
+        comments.add(comment);
+      }
     }
   } catch (error) {
     throw error;
   }
-  return poll;
+  return comments;
 }
 
 Future<CommentModel> getCommenter(int userId) async {
@@ -477,8 +415,8 @@ Future<CommentModel> getCommenter(int userId) async {
   return poll;
 }
 
-Future<CommentModel> getReplies(int parentId) async {
-  CommentModel poll;
+Future<List<CommentModel>> getReplies(int parentId) async {
+  List<CommentModel> comments = new List();
   try {
     String _deviceId = await _getDeviceId();
     String _token = await _getDeviceToken();
@@ -490,113 +428,43 @@ Future<CommentModel> getReplies(int parentId) async {
     });
     if (response.statusCode == 200) {
       dynamic json = jsonDecode(response.body);
-      poll = CommentModel.fromJson(json);
+      if (json['success'])
+        for (dynamic j in json['result']) {
+          CommentModel comment = CommentModel.fromJson(j);
+          comments.add(comment);
+        }
+      else {
+        CommentModel comment = CommentModel.fromJson(json['result']);
+        comments.add(comment);
+      }
     }
   } catch (error) {
     throw error;
   }
-  return poll;
+  return comments;
 }
 
-//------>Notification------>Notification----->Notification---->
-
-//---Posts
-Future<Map<String, dynamic>> replyNotification(
-    Map<String, dynamic> post) async {
-  dynamic data;
+Future<AccountModel> getNotificationUser(int userFromId) async {
+  AccountModel account;
   try {
     String _deviceId = await _getDeviceId();
     String _token = await _getDeviceToken();
-    //server res
-    final http.Response response = await http.post(
-      _serverUrl + '/auth/post-reply-notification',
-      headers: {
-        'device-id': _deviceId,
-        'token': _token,
-        'app-id': _applicationUniqueId,
-        'Accept': 'application/json'
-      },
-      body: post,
-    );
 
-    if (response.statusCode == 200) {
-      data = jsonDecode(response.body);
-    } else {
-      data = null;
-    }
-  } catch (error) {
-    throw error;
-  }
-  return data;
-}
-
-Future<Map<String, dynamic>> pollNotification(Map<String, dynamic> post) async {
-  dynamic data;
-  try {
-    String _deviceId = await _getDeviceId();
-    String _token = await _getDeviceToken();
-    //server res
-    final http.Response response = await http.post(
-      _serverUrl + '/auth/post-poll-notification',
-      headers: {
-        'device-id': _deviceId,
-        'token': _token,
-        'app-id': _applicationUniqueId,
-        'Accept': 'application/json'
-      },
-      body: post,
-    );
-
-    if (response.statusCode == 200) {
-      data = jsonDecode(response.body);
-    } else {
-      data = null;
-    }
-  } catch (error) {
-    throw error;
-  }
-  return data;
-}
-
-//--Get
-Future<NotificationModel> getNotification(int userId) async {
-  NotificationModel notification;
-  try {
-    String _deviceId = await _getDeviceId();
-    String _token = await _getDeviceToken();
-    final http.Response response =
-        await http.get(_serverUrl + '/auth/notifications/$userId', headers: {
-      "device-id": _deviceId,
-      "token": _token,
-      "app-id": _applicationUniqueId,
-    });
-    if (response.statusCode == 200) {
-      dynamic json = jsonDecode(response.body);
-      notification = NotificationModel.fromJson(json);
-    }
-  } catch (error) {
-    throw error;
-  }
-  return notification;
-}
-
-Future<NotificationModel> getNotificationUser(int userId) async {
-  NotificationModel notification;
-  try {
-    String _deviceId = await _getDeviceId();
-    String _token = await _getDeviceToken();
     final http.Response response = await http
-        .get(_serverUrl + '/auth/get-notification-username/$userId', headers: {
+        .get(_serverUrl + '/get-notification-user/$userFromId', headers: {
       "device-id": _deviceId,
       "token": _token,
       "app-id": _applicationUniqueId,
     });
     if (response.statusCode == 200) {
       dynamic json = jsonDecode(response.body);
-      notification = NotificationModel.fromJson(json);
+      if (json['success'])
+        account = AccountModel.fromJson(json['result']);
+      else
+        account = json['result'];
     }
   } catch (error) {
     throw error;
   }
-  return notification;
+  return account;
 }

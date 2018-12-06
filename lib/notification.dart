@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/functions.dart';
 import 'package:mma_poll/model.dart';
+import 'package:mma_poll/_service.dart';
 // Notifies when a poll you have created is closed. The thumbnail image in square will be shown
 // Also will notify when someone tags you in a comment. Profile image in circle avatar will be displayed
 
@@ -11,6 +12,11 @@ class NotificationCenter extends StatefulWidget {
 
 class _NotificationCenterState extends State<NotificationCenter> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarAll(
@@ -20,29 +26,50 @@ class _NotificationCenterState extends State<NotificationCenter> {
         true,
       ),
       body: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-        ),
-        child: ListView.builder(
-          itemCount: pollNotifications.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
-              child: Column(
-                children: <Widget>[
-                  GestureDetector(
-                      onTap: () {
-                        print(
-                            'navigate to where the comment was made or closed poll');
-                      },
-                      child: NotificationCard(id: pollNotifications[index].id)),
-                  Divider(
-                    height: 18.0,
-                    color: Colors.grey[300],
+        color: Colors.yellow[50],
+        child: FutureBuilder<List<NotificationModel>>(
+          future: getNotifications(1),
+          builder: (BuildContext context,
+              AsyncSnapshot<List<NotificationModel>> snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.active:
+              case ConnectionState.waiting:
+                return Container(
+                  color: Colors.yellow[50],
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Container(
+                    width: 50.0,
+                    height: 50.0,
+                    padding: EdgeInsets.all(30.0),
+                    alignment: Alignment.topCenter,
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.black,
+                    ),
                   ),
-                ],
-              ),
-            );
+                );
+              case ConnectionState.done:
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text("Sorry, we are having issues with our servers"),
+                  );
+                } else if (snapshot.hasData) {
+                  return ListView.builder(
+                    padding: EdgeInsets.only(top: 5.0),
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        children: <Widget>[
+                          NotificationCard(
+                            notification: snapshot.data[index],
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+            }
           },
         ),
       ),
@@ -51,19 +78,25 @@ class _NotificationCenterState extends State<NotificationCenter> {
 }
 
 class NotificationCard extends StatefulWidget {
-  final int id;
-  NotificationCard({this.id});
+  final NotificationModel notification;
+  NotificationCard({this.notification});
   @override
   _NotificationCardState createState() => _NotificationCardState();
 }
 
 class _NotificationCardState extends State<NotificationCard> {
-  String pic, name1, name2, date;
+  String _message;
+  Future<AccountModel> _account;
+  bool _isRead;
+  String _createdDate;
 
   @override
   void initState() {
     super.initState();
-    this.initInfo();
+    this._message = widget.notification.message;
+    this._isRead = widget.notification.isRead;
+    this._createdDate = widget.notification.createdDate;
+    this._account = getNotificationUser(1);
   }
 
   @override
@@ -71,85 +104,38 @@ class _NotificationCardState extends State<NotificationCard> {
     super.dispose();
   }
 
-  //Poll closings
-  void initInfo() {
-    for (int i = 0; i < pollNotifications.length; i++) {
-      InfoNotification notification = pollNotifications[i];
-      if (widget.id == notification.id) {
-        this.date = dateFormaterA(notification.date);
-        int infoId = notification.infoId;
-        for (int j = 0; j < infos.length; j++) {
-          Info info = infos[j];
-          if (infoId == info.id) {
-            this.name1 = info.name1;
-            this.name2 = info.name2;
-            this.pic = info.pic;
-          }
-        }
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0.0,
-      child: ListTile(
-        isThreeLine:
-            false, //will be managed based on replies vs closed poll noti
-        leading: new CircleAvatar(
-          backgroundImage: new NetworkImage(pic),
-          backgroundColor: Colors.grey,
-          radius: 28.0,
-        ),
-        title: RichText(
-          text: TextSpan(
-            style: TextStyle(
-              fontSize: 17.0,
-              color: Colors.black,
-            ),
-            children: <TextSpan>[
-              TextSpan(
-                text: '$name1',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              TextSpan(
-                text: ' vs ',
-              ),
-              TextSpan(
-                text: '$name2',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              TextSpan(text: ' poll has closed.'),
-            ],
-          ),
-        ),
-        subtitle: RichText(
-          text: TextSpan(
-            style: TextStyle(
-              fontSize: 15.0,
-              color: Colors.black45,
-            ),
-            children: <TextSpan>[
-              TextSpan(
-                text: 'You\'ve picked ',
-              ),
-              TextSpan(
-                text: '$name1',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              TextSpan(
-                text: ' $date ago',
-              ),
-            ],
-          ),
-        ),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.keyboard_arrow_right,
-          ),
-          onPressed: () {},
-        ),
+    return Container(
+      child: FutureBuilder<AccountModel>(
+        future: this._account,
+        builder: (BuildContext context, AsyncSnapshot<AccountModel> snapshot) {
+          if (snapshot.data != null) {
+            print('helellelelelele');
+          }
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.active:
+            case ConnectionState.waiting:
+              return new CircleAvatar(
+                backgroundImage: null,
+                backgroundColor: Colors.grey,
+                radius: 28.0,
+              );
+            case ConnectionState.done:
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text("Sorry, we are having issues with our servers"),
+                );
+              } else if (snapshot.hasData) {
+                return Container(
+                  width: 40.0,
+                  height: 40.0,
+                  color: Colors.black,
+                );
+              }
+          }
+        },
       ),
     );
   }
