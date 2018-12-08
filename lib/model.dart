@@ -25,16 +25,15 @@ class AccountModel {
 
   factory AccountModel.fromJson(Map<String, dynamic> json) {
     return AccountModel(
-        id: json['account_id'],
-        name: json['account_name'],
-        email: json['account_email'],
-        username: json['account_username'],
-        password: json['account_password'],
-        createdDate: json['account_created_date'],
-        profileInfo: json['account_profile_info'],
-        profileImage: json['account_profile_image'],
-        error: json['success'],
-        errorMessage: json['message']);
+      id: json['account_id'],
+      name: json['account_name'],
+      email: json['account_email'],
+      username: json['account_username'],
+      password: json['account_password'],
+      createdDate: json['account_created_date'],
+      profileInfo: json['account_profile_info'],
+      profileImage: json['account_profile_image'],
+    );
   }
 }
 
@@ -77,22 +76,21 @@ class PollModel {
 
   factory PollModel.fromJson(Map<String, dynamic> json) {
     return PollModel(
-        id: json['poll_id'],
-        creatorId: json['poll_creator_id'],
-        votersIds: json['poll_voters_ids'],
-        title: json['poll_title'],
-        createdDate: json['poll_created_date'],
-        fighter1: json['poll_fighter1'],
-        fighter2: json['poll_fighter2'],
-        image: json['poll_image'],
-        status: json['poll_status'],
-        votesForFighter1: json['poll_votes_for_fighter1'],
-        votesForFighter2: json['poll_votes_for_fighter2'],
-        votesForDraw: json['poll_votes_for_draw'],
-        votesForCanceled: json['poll_votes_for_canceled'],
-        view: json['view'],
-        error: json['success'],
-        errorMessage: json['message']);
+      id: json['poll_id'],
+      creatorId: json['poll_creator_id'],
+      votersIds: json['poll_voters_ids'],
+      title: json['poll_title'],
+      createdDate: json['poll_created_date'],
+      fighter1: json['poll_fighter1'],
+      fighter2: json['poll_fighter2'],
+      image: json['poll_image'],
+      status: json['poll_status'],
+      votesForFighter1: json['poll_votes_for_fighter1'],
+      votesForFighter2: json['poll_votes_for_fighter2'],
+      votesForDraw: json['poll_votes_for_draw'],
+      votesForCanceled: json['poll_votes_for_canceled'],
+      view: json['view'],
+    );
   }
 }
 //-----------------Comment--------------
@@ -121,15 +119,14 @@ class CommentModel {
 
   factory CommentModel.fromJson(Map<String, dynamic> json) {
     return CommentModel(
-        id: json['comment_id'],
-        parentCommentId: json['parent_comment_id'],
-        replyId: json['reply_id'],
-        creatorId: json['comment_creator_account_id'],
-        createdDate: json['comment_created_date'],
-        info: json['comment_info'],
-        likes: json['comment_likes'],
-        error: json['success'],
-        errorMessage: json['message']);
+      id: json['comment_id'],
+      parentCommentId: json['parent_comment_id'],
+      replyId: json['reply_id'],
+      creatorId: json['comment_creator_account_id'],
+      createdDate: json['comment_created_date'],
+      info: json['comment_info'],
+      likes: json['comment_likes'],
+    );
   }
 }
 
@@ -142,28 +139,31 @@ class NotificationModel {
   final String message;
   final String createdDate;
   final bool isRead;
+  final bool isComment;
   final bool error;
   final String errorMessage;
 
-  NotificationModel(
-      {this.id,
-      this.toUserId,
-      this.fromUserId,
-      this.message,
-      this.createdDate,
-      this.isRead,
-      this.error,
-      this.errorMessage});
+  NotificationModel({
+    this.id,
+    this.toUserId,
+    this.fromUserId,
+    this.message,
+    this.createdDate,
+    this.isRead,
+    this.isComment,
+    this.error,
+    this.errorMessage,
+  });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-        id: json['notification_id'],
-        toUserId: json['notification_to_user_id'],
-        fromUserId: json['notification_from_id'],
-        message: json['notification_message'],
-        createdDate: json['notification_created_date'],
-        isRead: json['notification_read'],
-        error: json['success'],
-        errorMessage: json['message']);
+      id: json['notification_id'],
+      toUserId: json['notification_to_user_id'],
+      fromUserId: json['notification_from_id'],
+      message: json['notification_message'],
+      createdDate: json['notification_created_date'],
+      isRead: json['notification_read'],
+      isComment: json['notification_comment'],
+    );
   }
 }

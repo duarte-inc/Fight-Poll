@@ -3,25 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:mma_poll/settings.dart';
 // ------------------------- SOME COMMON FUNCTIONS --------------------------
 
-String dateFormaterA(DateTime timeInput) {
+String dateFormaterA(String timeInput) {
+  var parsedDate = DateTime.parse(timeInput);
   dynamic date;
-  if (DateTime.now().year - timeInput.year != 0) {
-    date = (DateTime.now().year - timeInput.year).abs();
+  if (DateTime.now().year - parsedDate.year != 0) {
+    date = (DateTime.now().year - parsedDate.year).abs();
     date = "$date years";
-  } else if (DateTime.now().month - timeInput.month != 0) {
-    date = (DateTime.now().month - timeInput.month).abs();
+  } else if (DateTime.now().month - parsedDate.month != 0) {
+    date = (DateTime.now().month - parsedDate.month).abs();
     date = "$date months";
-  } else if (DateTime.now().day - timeInput.day != 0) {
-    date = (DateTime.now().day - timeInput.day).abs();
+  } else if (DateTime.now().day - parsedDate.day != 0) {
+    date = (DateTime.now().day - parsedDate.day).abs();
     date = "$date days";
-  } else if (DateTime.now().hour - timeInput.hour != 0) {
-    date = (DateTime.now().hour - timeInput.hour).abs();
+  } else if (DateTime.now().hour - parsedDate.hour != 0) {
+    date = (DateTime.now().hour - parsedDate.hour).abs();
     date = "$date hours";
-  } else if (DateTime.now().minute - timeInput.minute != 0) {
-    date = (DateTime.now().minute - timeInput.minute).abs();
+  } else if (DateTime.now().minute - parsedDate.minute != 0) {
+    date = (DateTime.now().minute - parsedDate.minute).abs();
     date = "$date minutes";
   } else {
-    date = (DateTime.now().second - timeInput.second).abs();
+    date = (DateTime.now().second - parsedDate.second).abs();
     date = "$date seconds";
   }
   return date;

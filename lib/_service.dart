@@ -17,7 +17,8 @@ String _deviceUniqueId = "";
 const String _tokenKey = "token";
 
 //Server url
-const String _serverUrl = 'http://10.159.134.114:3000'; //10.159.133.152
+const String _serverUrl =
+    'http://10.151.135.207:3000'; //10.159.62.134 //10.159.133.152 //10.151.135.207
 
 //Note final, its init only once
 final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
@@ -31,7 +32,6 @@ Future<String> _getDeviceId() async {
       if (Platform.isAndroid) {
         AndroidDeviceInfo androidDeviceInfo = await _deviceInfo.androidInfo;
         _deviceUniqueId = "${androidDeviceInfo.device}-${androidDeviceInfo.id}";
-        print(_deviceUniqueId);
       } else if (Platform.isIOS) {
         IosDeviceInfo iosDeviceInfo = await _deviceInfo.iosInfo;
         _deviceUniqueId =
@@ -310,7 +310,6 @@ Future<List<PollModel>> getPolls() async {
   } catch (error) {
     throw error;
   }
-
   return polls;
 }
 

@@ -3,6 +3,8 @@ import 'package:mma_poll/poll-feed.dart';
 import 'package:mma_poll/create-poll.dart';
 import 'package:mma_poll/notification.dart';
 import 'package:mma_poll/settings.dart';
+import 'package:mma_poll/model.dart';
+import 'package:mma_poll/_service.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,37 +28,145 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  TextEditingController textController;
+  TextEditingController _textController;
 
   void initState() {
     super.initState();
-    this.textController = new TextEditingController();
+    this._textController = new TextEditingController();
   }
 
   void dispose() {
     super.dispose();
-    this.textController.dispose();
+    this._textController.dispose();
   }
+
+  Widget _notificationBar() {
+    return IconButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NotificationCenter(),
+          ),
+        );
+      },
+      iconSize: 30.0,
+      tooltip: 'notifications',
+      icon: FutureBuilder<List<NotificationModel>>(
+        future: getNotifications(1),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<NotificationModel>> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.active:
+            case ConnectionState.waiting:
+              return Container(
+                color: Colors.yellow[50],
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Container(
+                  width: 60.0,
+                  height: 50.0,
+                  padding: EdgeInsets.all(30.0),
+                  alignment: Alignment.topCenter,
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.black,
+                  ),
+                ),
+              );
+            case ConnectionState.done:
+              if (snapshot.hasError) {
+                return Icon(Icons.notifications_none);
+              } else if (snapshot.hasData) {
+                if (snapshot.data.length < 1) {
+                  return Icon(Icons.notifications_none);
+                } else {
+                  return Stack(
+                    children: <Widget>[
+                      Icon(
+                        Icons.notifications,
+                        color: Colors.black,
+                      ),
+                      Positioned(
+                        right: 0.0,
+                        top: 0.0,
+                        child: Container(
+                          height: 14.0,
+                          width: 14.0,
+                          child: Text(
+                            "${snapshot.data.length}",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 11.0),
+                            textAlign: TextAlign.center,
+                          ),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.red,
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                }
+              }
+          }
+        },
+      ),
+    );
+  }
+  // Widget _notificationBarx() {
+  //   return IconButton(
+  //     iconSize: 30.0,
+  //     tooltip: 'notifications',
+  //     icon: FutureBuilder<List<NotificationModel>>(
+  //       future: getNotifications(1),
+  //       builder: (BuildContext context,
+  //           AsyncSnapshot<List<NotificationModel>> snapshot) {
+  //         switch (snapshot.connectionState) {
+  //           case ConnectionState.none:
+  //           case ConnectionState.active:
+  //           case ConnectionState.waiting:
+  //             return Container(
+  //               color: Colors.yellow[50],
+  //               width: MediaQuery.of(context).size.width,
+  //               height: MediaQuery.of(context).size.height,
+  //               child: Container(
+  //                 width: 50.0,
+  //                 height: 50.0,
+  //                 padding: EdgeInsets.all(30.0),
+  //                 alignment: Alignment.topCenter,
+  //                 child: CircularProgressIndicator(
+  //                   backgroundColor: Colors.black,
+  //                 ),
+  //               ),
+  //             );
+  //           case ConnectionState.done:
+  //             if (snapshot.hasError) {
+  //               return Center(
+  //                 child: Text("Sorry, we are having issues with our servers"),
+  //               );
+  //             } else if (snapshot.hasData) {
+  //               return Stack(
+  //                 children: <Widget>[
+  //                   Icon(Icons.notifications_none),
+
+  //             }
+  //         }
+  //       },
+  //     ),
+  //     onPressed: () {
+
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: new IconButton(
-          iconSize: 30.0,
-          icon: Icon(Icons.notifications_none),
-          tooltip: 'notifications',
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NotificationCenter(),
-              ),
-            );
-          },
-        ),
+        leading: _notificationBar(),
         title: TextField(
-          controller: this.textController,
+          controller: this._textController,
           autocorrect: false,
           decoration: InputDecoration(
             border: InputBorder.none,

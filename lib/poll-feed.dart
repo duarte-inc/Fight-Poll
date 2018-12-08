@@ -12,9 +12,6 @@ class _FeedState extends State<Feed> {
   @override
   void initState() {
     super.initState();
-    getPolls().then((j) {
-      print(j);
-    });
   }
 
   @override

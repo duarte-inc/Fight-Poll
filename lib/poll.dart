@@ -158,7 +158,7 @@ class _PollState extends State<Poll> {
                             ),
                             Container(
                               child: Text(
-                                "${dateFormaterA(snapshot.data.createdDate)} ago",
+                                "${dateFormaterA('2018-12-07 11:16:49.521')} ago",
                                 style: TextStyle(
                                   color: Colors.black54,
                                   fontSize: 12.0,
