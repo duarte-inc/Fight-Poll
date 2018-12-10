@@ -17,8 +17,7 @@ String _deviceUniqueId = "";
 const String _tokenKey = "token";
 
 //Server url
-const String _serverUrl =
-    'http://10.151.135.207:3000'; //10.159.62.134 //10.159.133.152 //10.151.135.207
+const String _serverUrl = 'http://10.151.135.207:3000';
 
 //Note final, its init only once
 final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
@@ -269,7 +268,7 @@ Future<AccountModel> viewProfile(int id) async {
     String _deviceId = await _getDeviceId();
     String _token = await _getDeviceToken();
     final http.Response response =
-        await http.get(_serverUrl + '/auth/users/$id', headers: {
+        await http.get(_serverUrl + '/users/$id/view-profile', headers: {
       "device-id": _deviceId,
       "token": _token,
       "app-id": _applicationUniqueId,
@@ -343,13 +342,14 @@ Future<List<NotificationModel>> getNotifications(int userId) async {
   return notifications;
 }
 
-Future<PollModel> getPoll(int pollId) async {
+Future<PollModel> getPoll(String pollId) async {
+  int pollIntId = int.parse(pollId);
   PollModel poll;
   try {
     String _deviceId = await _getDeviceId();
     String _token = await _getDeviceToken();
     final http.Response response =
-        await http.get(_serverUrl + '/polls/$pollId', headers: {
+        await http.get(_serverUrl + '/polls/$pollIntId', headers: {
       "device-id": _deviceId,
       "token": _token,
       "app-id": _applicationUniqueId,
@@ -431,8 +431,9 @@ Future<List<CommentModel>> getReplies(int parentId) async {
         for (dynamic j in json['result']) {
           CommentModel comment = CommentModel.fromJson(j);
           comments.add(comment);
-        }
+        } //Moleton gala of the time of India
       else {
+        //The moleton dynamic of the time in India will be remembered in the place of all the fighting neighbors as the best in the world
         CommentModel comment = CommentModel.fromJson(json['result']);
         comments.add(comment);
       }

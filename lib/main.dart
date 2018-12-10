@@ -60,20 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
             case ConnectionState.none:
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return Container(
-                color: Colors.yellow[50],
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Container(
-                  width: 60.0,
-                  height: 50.0,
-                  padding: EdgeInsets.all(30.0),
-                  alignment: Alignment.topCenter,
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.black,
-                  ),
-                ),
-              );
+              return Icon(Icons.notifications_none);
             case ConnectionState.done:
               if (snapshot.hasError) {
                 return Icon(Icons.notifications_none);

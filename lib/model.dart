@@ -5,7 +5,7 @@ class AccountModel {
   final String email;
   final String username;
   final String password;
-  final DateTime createdDate;
+  final String createdDate;
   final String profileInfo;
   final String profileImage;
   final bool error;
@@ -39,11 +39,11 @@ class AccountModel {
 
 //-----------------Poll-----------------
 class PollModel {
-  final int id;
+  final String id;
   final int creatorId;
   final List<int> votersIds;
   final String title;
-  final DateTime createdDate;
+  final String createdDate;
   final String fighter1;
   final String fighter2;
   final String image;
@@ -53,26 +53,23 @@ class PollModel {
   final int votesForDraw;
   final int votesForCanceled;
   final int view;
-  final bool error;
-  final String errorMessage;
 
-  PollModel(
-      {this.id,
-      this.creatorId,
-      this.votersIds,
-      this.title,
-      this.createdDate,
-      this.fighter1,
-      this.fighter2,
-      this.image,
-      this.status,
-      this.votesForFighter1,
-      this.votesForFighter2,
-      this.votesForDraw,
-      this.votesForCanceled,
-      this.view,
-      this.error,
-      this.errorMessage});
+  PollModel({
+    this.id,
+    this.creatorId,
+    this.votersIds,
+    this.title,
+    this.createdDate,
+    this.fighter1,
+    this.fighter2,
+    this.image,
+    this.status,
+    this.votesForFighter1,
+    this.votesForFighter2,
+    this.votesForDraw,
+    this.votesForCanceled,
+    this.view,
+  });
 
   factory PollModel.fromJson(Map<String, dynamic> json) {
     return PollModel(
@@ -100,7 +97,7 @@ class CommentModel {
   final int parentCommentId;
   final int replyId;
   final int creatorId;
-  final DateTime createdDate;
+  final String createdDate;
   final String info;
   final int likes;
   final bool error;

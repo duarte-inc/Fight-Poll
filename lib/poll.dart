@@ -14,18 +14,17 @@ enum Notifier {
 }
 
 class Poll extends StatefulWidget {
-  final int id;
+  final PollModel poll;
 
   //Constructor
-  Poll(this.id);
+  Poll({this.poll});
 
   @override
   _PollState createState() => _PollState();
 }
 
 class _PollState extends State<Poll> {
-
-  Future<PollModel> _poll;
+  Future<AccountModel> _poller;
   Notifier _notifier, _lastNotifier;
   int _votesForFighter1, _votesForFighter2, _votesForDraw, _votesForCanceled;
   bool _selected, _status;
@@ -56,8 +55,15 @@ class _PollState extends State<Poll> {
     super.initState();
     this._notifier = Notifier.None;
     this._lastNotifier = Notifier.None;
-    this._poll = getPoll(widget.id);
-    this._poll.then((result) => this._status = result.status);
+
+    this._poller = viewProfile(widget.poll.creatorId);
+    this._selected = widget.poll.status;
+    this._status = widget.poll.status;
+
+    _votesForFighter1 = widget.poll.votesForFighter1;
+    _votesForFighter2 = widget.poll.votesForFighter2;
+    _votesForDraw = widget.poll.votesForDraw;
+    _votesForCanceled = widget.poll.votesForCanceled;
   }
 
   @override
@@ -82,10 +88,13 @@ class _PollState extends State<Poll> {
         this._votesForFighter2 +
         this._votesForDraw +
         this._votesForCanceled;
-    double name1Perc = this._votesForFighter1 / total;
-    double name2Perc = this._votesForFighter2 / total;
-    double drawPerc = this._votesForDraw / total;
-    double cancelPerc = this._votesForCanceled / total;
+    if (total == 0) {
+      total = 1;
+    }
+    double name1Perc = (this._votesForFighter1 / total).abs();
+    double name2Perc = (this._votesForFighter2 / total).abs();
+    double drawPerc = (this._votesForDraw / total).abs();
+    double cancelPerc = (this._votesForCanceled / total).abs();
 
     return Scaffold(
       appBar: appBarAll(
@@ -96,9 +105,10 @@ class _PollState extends State<Poll> {
       ),
       body: Container(
         color: Colors.yellow[50],
-        child: FutureBuilder<PollModel>(
-          future: this._poll,
-          builder: (BuildContext context, AsyncSnapshot<PollModel> snapshot) {
+        child: FutureBuilder<AccountModel>(
+          future: this._poller,
+          builder:
+              (BuildContext context, AsyncSnapshot<AccountModel> snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
               case ConnectionState.active:
@@ -119,6 +129,7 @@ class _PollState extends State<Poll> {
                 );
               case ConnectionState.done:
                 if (snapshot.hasError) {
+                  print(snapshot.error);
                   return Center(
                     child: Text("Sorry, we are having issues with our servers"),
                   );
@@ -134,7 +145,7 @@ class _PollState extends State<Poll> {
                         ),
                         width: MediaQuery.of(context).size.width,
                         child: Text(
-                          "${snapshot.data.title}",
+                          widget.poll.title,
                           style: TextStyle(
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold,
@@ -150,7 +161,7 @@ class _PollState extends State<Poll> {
                           children: <Widget>[
                             Container(
                               child: Text(
-                                "Poller: Thomas",
+                                "Poller: ${snapshot.data.username}",
                                 style: TextStyle(
                                   color: Colors.black45,
                                 ),
@@ -158,7 +169,7 @@ class _PollState extends State<Poll> {
                             ),
                             Container(
                               child: Text(
-                                "${dateFormaterA('2018-12-07 11:16:49.521')} ago",
+                                "2 days ago",
                                 style: TextStyle(
                                   color: Colors.black54,
                                   fontSize: 12.0,
@@ -174,7 +185,7 @@ class _PollState extends State<Poll> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: Image.network(
-                            snapshot.data.image,
+                            widget.poll.image,
                             fit: BoxFit.cover,
                             height: MediaQuery.of(context).size.height * .28,
                             width: MediaQuery.of(context).size.width * .95,
@@ -193,15 +204,15 @@ class _PollState extends State<Poll> {
                                 child: ListTile(
                                   dense: true,
                                   title: Text(
-                                    "${snapshot.data.fighter1}",
+                                    widget.poll.fighter1,
                                     style: TextStyle(fontSize: 18.0),
                                   ),
                                   subtitle: Text(
-                                    "${snapshot.data.votesForFighter1}",
+                                    "${this._votesForFighter1}",
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  enabled: snapshot.data.status,
+                                  enabled: widget.poll.status,
                                   trailing: Icon(
                                     this._notifier == Notifier.Red
                                         ? Icons.check_circle
@@ -245,15 +256,15 @@ class _PollState extends State<Poll> {
                                 child: ListTile(
                                   dense: true,
                                   title: Text(
-                                    "${snapshot.data.fighter2}",
+                                    widget.poll.fighter2,
                                     style: TextStyle(fontSize: 18.0),
                                   ),
                                   subtitle: Text(
-                                    "${snapshot.data.votesForFighter2}",
+                                    "${this._votesForFighter2}",
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  enabled: snapshot.data.status,
+                                  enabled: widget.poll.status,
                                   trailing: Icon(
                                     this._notifier == Notifier.Yellow
                                         ? Icons.check_circle
@@ -301,11 +312,11 @@ class _PollState extends State<Poll> {
                                     style: TextStyle(fontSize: 18.0),
                                   ),
                                   subtitle: Text(
-                                    "${snapshot.data.votesForDraw}",
+                                    "${this._votesForDraw}",
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  enabled: snapshot.data.status,
+                                  enabled: widget.poll.status,
                                   trailing: Icon(
                                     this._notifier == Notifier.Blue
                                         ? Icons.check_circle
@@ -353,11 +364,11 @@ class _PollState extends State<Poll> {
                                     style: TextStyle(fontSize: 18.0),
                                   ),
                                   subtitle: Text(
-                                    "${snapshot.data.votesForCanceled}",
+                                    "${this._votesForCanceled}",
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  enabled: snapshot.data.status,
+                                  enabled: widget.poll.status,
                                   trailing: Icon(
                                     this._notifier == Notifier.Green
                                         ? Icons.check_circle

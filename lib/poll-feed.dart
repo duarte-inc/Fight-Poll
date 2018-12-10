@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/model.dart';
 import 'package:mma_poll/poll.dart';
+import 'package:mma_poll/notification.dart';
 import 'package:mma_poll/_service.dart';
 
 class Feed extends StatefulWidget {
@@ -42,7 +43,6 @@ class _FeedState extends State<Feed> {
               );
             case ConnectionState.done:
               if (snapshot.hasError) {
-                print(snapshot.error);
                 return Center(
                   child: Text("Sorry, we are having issues with our servers"),
                 );
@@ -219,9 +219,7 @@ class _FightCardState extends State<FightCard> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => Poll(
-                    widget.poll.id,
-                  ),
+              builder: (context) => Poll(poll: widget.poll),
             ),
           );
           super.setState(() {});

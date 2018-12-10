@@ -112,7 +112,7 @@ class _NotificationCardState extends State<NotificationCard> {
       padding: EdgeInsets.all(0.0),
       margin: EdgeInsets.all(0.0),
       child: FutureBuilder<AccountModel>(
-        future: this._account,
+        future: getNotificationUser(widget.notification.fromUserId),
         builder: (BuildContext context, AsyncSnapshot<AccountModel> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -138,94 +138,146 @@ class _NotificationCardState extends State<NotificationCard> {
                   child: Text("Sorry, we are having issues with our servers"),
                 );
               } else if (snapshot.hasData) {
-                return Card(
-                  elevation: 0.0,
-                  margin: const EdgeInsets.only(
-                      top: 5.0, bottom: 5.0, left: 10.0, right: 10.0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          this._isComment
-                              ? Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 5.0,
-                                      bottom: 5.0,
-                                      left: 10.0,
-                                      right: 10.0),
-                                  child: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        snapshot.data.profileImage),
-                                    radius: 25.0,
+                return this._isComment
+                    ? GestureDetector(
+                        onTap: () {
+                          print('this is comment');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Container()),
+                          );
+                        },
+                        child: Card(
+                          elevation: 0.0,
+                          margin: const EdgeInsets.only(
+                              top: 5.0, bottom: 5.0, left: 10.0, right: 10.0),
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 5.0,
+                                        bottom: 5.0,
+                                        left: 10.0,
+                                        right: 10.0),
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          snapshot.data.profileImage),
+                                      radius: 25.0,
+                                    ),
                                   ),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 5.0,
-                                      bottom: 5.0,
-                                      left: 10.0,
-                                      right: 10.0),
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.yellow,
-                                    child:
-                                        Image.asset('assets/images/poll1.png'),
-                                    radius: 25.0,
-                                  ),
-                                ),
-                          Expanded(
-                            child: Column(
-                              children: <Widget>[
-                                this._isComment
-                                    ? Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            text: '',
-                                            style: DefaultTextStyle.of(context)
-                                                .style,
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text:
-                                                    '${snapshot.data.username}',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
+                                  Expanded(
+                                    child: Column(
+                                      children: <Widget>[
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: RichText(
+                                            text: TextSpan(
+                                              text: '',
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style,
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                  text:
+                                                      '${snapshot.data.username}',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
-                                              ),
-                                              TextSpan(text: ' replied to ur comment'),
-                                            ],
+                                                TextSpan(
+                                                    text:
+                                                        ' replied to ur comment'),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      )
-                                    : Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'poll closed',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            '${this._message}',
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
-                                      ),
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    '${this._message}',
-                                    overflow: TextOverflow.ellipsis,
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            '${dateFormaterA(this._createdDate)} ago',
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    '${dateFormaterA(this._createdDate)} ago',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
+                        ),
+                      )
+                    : GestureDetector(
+                        onTap: () {
+                          print('this is poll');
+                        },
+                        child: Card(
+                          elevation: 0.0,
+                          margin: const EdgeInsets.only(
+                              top: 5.0, bottom: 5.0, left: 10.0, right: 10.0),
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 5.0,
+                                        bottom: 5.0,
+                                        left: 10.0,
+                                        right: 10.0),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.yellow,
+                                      child: Image.asset(
+                                          'assets/images/poll1.png'),
+                                      radius: 25.0,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      children: <Widget>[
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'poll closed',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            '${this._message}',
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            '${dateFormaterA(this._createdDate)} ago',
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
               }
           }
         },
