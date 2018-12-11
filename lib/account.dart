@@ -118,7 +118,6 @@ class _LogoutState extends State<Logout> {
           fit: StackFit.expand,
           children: <Widget>[
             Image.asset(
-              //The killer the more optimised the demise is going to be
               "assets/images/poll1.png",
               fit: BoxFit.fitWidth,
             ),

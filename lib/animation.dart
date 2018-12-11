@@ -49,8 +49,8 @@ class _SizeAnimationState extends State<SizeAnimation>
 
   @override
   void dispose() {
-    super.dispose();
     this._animationController.dispose();
+    super.dispose();
   }
 
   @override

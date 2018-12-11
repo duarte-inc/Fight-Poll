@@ -127,18 +127,11 @@ class CommentCard extends StatefulWidget {
 }
 
 class _CommentCardState extends State<CommentCard> {
-  int _likes;
-  String _info;
-  String _cratedDate;
   Future<AccountModel> _account;
-  Future<CommentModel> _comments;
 
   @override
   void initState() {
     super.initState();
-    this._likes = widget.comment.likes;
-    this._info = widget.comment.info;
-    this._cratedDate = widget.comment.createdDate;
     this._account = getNotificationUser(widget.comment.creatorId);
   }
 
@@ -152,26 +145,13 @@ class _CommentCardState extends State<CommentCard> {
     const double pad = 10.0;
     return Container(
       child: FutureBuilder<AccountModel>(
-        future: getNotificationUser(widget.comment.creatorId),
+        future: this._account,
         builder: (BuildContext context, AsyncSnapshot<AccountModel> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return Container(
-                color: Colors.yellow[50],
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Container(
-                  width: 50.0,
-                  height: 50.0,
-                  padding: EdgeInsets.all(30.0),
-                  alignment: Alignment.topCenter,
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.black,
-                  ),
-                ),
-              );
+              return Container();
             case ConnectionState.done:
               if (snapshot.hasError) {
                 return Center(

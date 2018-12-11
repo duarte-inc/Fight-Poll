@@ -54,8 +54,6 @@ class _PollState extends State<Poll> {
   @override
   void initState() {
     super.initState();
-    this._notifier = Notifier.None;
-    this._lastNotifier = Notifier.None;
 
     this._poller = viewProfile(widget.poll.creatorId);
     this._selected = widget.poll.status;
@@ -65,16 +63,20 @@ class _PollState extends State<Poll> {
     _votesForFighter2 = widget.poll.votesForFighter2;
     _votesForDraw = widget.poll.votesForDraw;
     _votesForCanceled = widget.poll.votesForCanceled;
+
+    print('initState');
   }
 
   @override
   void didUpdateWidget(Poll oldWidget) {
     super.didUpdateWidget(oldWidget);
+    print('didUpdate');
   }
 
   @override
   void dispose() {
     super.dispose();
+    print('dispose');
   }
 
   @override
@@ -113,6 +115,7 @@ class _PollState extends State<Poll> {
             iconSize: 30.0,
             icon: Icon(Icons.settings),
             onPressed: () {
+              this._lastNotifier = Notifier.None;
               this._notifier = Notifier.None;
               _votesForFighter1 = widget.poll.votesForFighter1;
               _votesForFighter2 = widget.poll.votesForFighter2;
@@ -446,6 +449,7 @@ class _PollState extends State<Poll> {
                           ),
                           onTap: () {
                             this._notifier = Notifier.None;
+                            this._lastNotifier = Notifier.None;
                             _votesForFighter1 = widget.poll.votesForFighter1;
                             _votesForFighter2 = widget.poll.votesForFighter2;
                             _votesForDraw = widget.poll.votesForDraw;

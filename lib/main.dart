@@ -101,57 +101,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-  // Widget _notificationBarx() {
-  //   return IconButton(
-  //     iconSize: 30.0,
-  //     tooltip: 'notifications',
-  //     icon: FutureBuilder<List<NotificationModel>>(
-  //       future: getNotifications(1),
-  //       builder: (BuildContext context,
-  //           AsyncSnapshot<List<NotificationModel>> snapshot) {
-  //         switch (snapshot.connectionState) {
-  //           case ConnectionState.none:
-  //           case ConnectionState.active:
-  //           case ConnectionState.waiting:
-  //             return Container(
-  //               color: Colors.yellow[50],
-  //               width: MediaQuery.of(context).size.width,
-  //               height: MediaQuery.of(context).size.height,
-  //               child: Container(
-  //                 width: 50.0,
-  //                 height: 50.0,
-  //                 padding: EdgeInsets.all(30.0),
-  //                 alignment: Alignment.topCenter,
-  //                 child: CircularProgressIndicator(
-  //                   backgroundColor: Colors.black,
-  //                 ),
-  //               ),
-  //             );
-  //           case ConnectionState.done:
-  //             if (snapshot.hasError) {
-  //               return Center(
-  //                 child: Text("Sorry, we are having issues with our servers"),
-  //               );
-  //             } else if (snapshot.hasData) {
-  //               return Stack(
-  //                 children: <Widget>[
-  //                   Icon(Icons.notifications_none),
-
-  //             }
-  //         }
-  //       },
-  //     ),
-  //     onPressed: () {
-
-  //     },
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: _notificationBar(),
+        leading: this._notificationBar(),
         title: TextField(
           controller: this._textController,
           autocorrect: false,
