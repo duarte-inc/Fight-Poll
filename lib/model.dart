@@ -93,26 +93,23 @@ class PollModel {
 //-----------------Comment--------------
 
 class CommentModel {
-  final int id;
+  final String id;
   final int parentCommentId;
   final int replyId;
   final int creatorId;
   final String createdDate;
   final String info;
   final int likes;
-  final bool error;
-  final String errorMessage;
 
-  CommentModel(
-      {this.id,
-      this.parentCommentId,
-      this.replyId,
-      this.creatorId,
-      this.createdDate,
-      this.info,
-      this.likes,
-      this.error,
-      this.errorMessage});
+  CommentModel({
+    this.id,
+    this.parentCommentId,
+    this.replyId,
+    this.creatorId,
+    this.createdDate,
+    this.info,
+    this.likes,
+  });
 
   factory CommentModel.fromJson(Map<String, dynamic> json) {
     return CommentModel(

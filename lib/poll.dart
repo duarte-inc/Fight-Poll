@@ -3,6 +3,7 @@ import 'package:mma_poll/comments.dart';
 import 'package:mma_poll/model.dart';
 import 'package:mma_poll/_service.dart';
 import 'package:mma_poll/animation.dart';
+import 'package:mma_poll/settings.dart';
 import 'package:mma_poll/functions.dart';
 
 enum Notifier {
@@ -79,11 +80,9 @@ class _PollState extends State<Poll> {
   @override
   Widget build(BuildContext context) {
     //This manages selection of choices
-
     this._selectionManager();
 
     //Calculating percentage
-
     int total = this._votesForFighter1 +
         this._votesForFighter2 +
         this._votesForDraw +
@@ -97,11 +96,38 @@ class _PollState extends State<Poll> {
     double cancelPerc = (this._votesForCanceled / total).abs();
 
     return Scaffold(
-      appBar: appBarAll(
-        context,
-        "Vote",
-        "View Poll",
-        this._status,
+      appBar: AppBar(
+        leading: new IconButton(
+          iconSize: 30.0,
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Container(
+          alignment: Alignment.center,
+          child: Text(this._status ? "Vote" : "View poll"),
+        ),
+        actions: <Widget>[
+          IconButton(
+            iconSize: 30.0,
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              this._notifier = Notifier.None;
+              _votesForFighter1 = widget.poll.votesForFighter1;
+              _votesForFighter2 = widget.poll.votesForFighter2;
+              _votesForDraw = widget.poll.votesForDraw;
+              _votesForCanceled = widget.poll.votesForCanceled;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Settings(),
+                ),
+              );
+            },
+            tooltip: 'settings',
+          )
+        ],
       ),
       body: Container(
         color: Colors.yellow[50],
@@ -131,7 +157,7 @@ class _PollState extends State<Poll> {
                 if (snapshot.hasError) {
                   print(snapshot.error);
                   return Center(
-                    child: Text("Sorry, we are having issues with our servers"),
+                    child: Text("Sorry, we're having issues with our servers"),
                   );
                 } else if (snapshot.hasData) {
                   return SingleChildScrollView(
@@ -169,7 +195,7 @@ class _PollState extends State<Poll> {
                             ),
                             Container(
                               child: Text(
-                                "2 days ago",
+                                "${dateFormaterA(widget.poll.createdDate)} ago",
                                 style: TextStyle(
                                   color: Colors.black54,
                                   fontSize: 12.0,
@@ -419,6 +445,11 @@ class _PollState extends State<Poll> {
                                     [TextDecoration.none])),
                           ),
                           onTap: () {
+                            this._notifier = Notifier.None;
+                            _votesForFighter1 = widget.poll.votesForFighter1;
+                            _votesForFighter2 = widget.poll.votesForFighter2;
+                            _votesForDraw = widget.poll.votesForDraw;
+                            _votesForCanceled = widget.poll.votesForCanceled;
                             Navigator.push(
                               context,
                               MaterialPageRoute(

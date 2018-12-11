@@ -9,15 +9,16 @@ class Comments extends StatefulWidget {
 }
 
 class _CommentsState extends State<Comments> {
+  Future<List<CommentModel>> _comments;
   @override
   void initState() {
     super.initState();
+    this._comments = getParentComments();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        //BuildContext context, String title, String title1, bool status, Icon icon
         appBar: appBarAll(
           context,
           "Comments ",
@@ -27,7 +28,7 @@ class _CommentsState extends State<Comments> {
         body: Container(
           color: Colors.yellow[50],
           child: FutureBuilder<List<CommentModel>>(
-            future: getParentComments(),
+            future: this._comments,
             builder: (BuildContext context,
                 AsyncSnapshot<List<CommentModel>> snapshot) {
               switch (snapshot.connectionState) {
@@ -52,7 +53,7 @@ class _CommentsState extends State<Comments> {
                   if (snapshot.hasError) {
                     return Center(
                       child:
-                          Text("Sorry, we are having issues with our servers"),
+                          Text("Sorry, we're having issues with our servers"),
                     );
                   } else if (snapshot.hasData) {
                     //Todo
@@ -128,8 +129,9 @@ class CommentCard extends StatefulWidget {
 class _CommentCardState extends State<CommentCard> {
   int _likes;
   String _info;
-  DateTime _cratedDate;
-  AccountModel _account;
+  String _cratedDate;
+  Future<AccountModel> _account;
+  Future<CommentModel> _comments;
 
   @override
   void initState() {
@@ -137,6 +139,7 @@ class _CommentCardState extends State<CommentCard> {
     this._likes = widget.comment.likes;
     this._info = widget.comment.info;
     this._cratedDate = widget.comment.createdDate;
+    this._account = getNotificationUser(widget.comment.creatorId);
   }
 
   @override
@@ -148,111 +151,157 @@ class _CommentCardState extends State<CommentCard> {
   Widget build(BuildContext context) {
     const double pad = 10.0;
     return Container(
-      child: Card(
-        elevation: 0.0,
-        margin: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Column(
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: pad),
-                      child: CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(this._account.profileImage),
-                        radius: 20.0,
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: pad, right: pad, top: pad),
-                            child: Text(
-                              "${this._account.username}",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 17.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: pad),
-                            child: Text(
-                              "${this._cratedDate}",
-                              style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 13.0),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+      child: FutureBuilder<AccountModel>(
+        future: getNotificationUser(widget.comment.creatorId),
+        builder: (BuildContext context, AsyncSnapshot<AccountModel> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.active:
+            case ConnectionState.waiting:
+              return Container(
+                color: Colors.yellow[50],
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Container(
+                  width: 50.0,
+                  height: 50.0,
+                  padding: EdgeInsets.all(30.0),
+                  alignment: Alignment.topCenter,
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.black,
+                  ),
                 ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.only(
-                      left: 51.0, top: 3.0, bottom: 0.0, right: 0.0),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        "${this._info}",
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          height: 1.07,
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.zero,
-                        child: Row(
+              );
+            case ConnectionState.done:
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text("Sorry, we are having issues with our servers"),
+                );
+              } else if (snapshot.hasData) {
+                return GestureDetector(
+                  onTap: () {
+                    print('comment tapped');
+                  },
+                  child: Card(
+                    elevation: 0.0,
+                    margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Column(
+                      children: <Widget>[
+                        Column(
                           children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.only(top: 6.0),
-                              child: Text(
-                                "${this._likes}",
-                                style: TextStyle(),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.thumb_up),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.thumb_down),
-                            ),
-                            Expanded(
-                              child: Container(
-                                alignment: Alignment.centerRight,
-                                child: FlatButton(
-                                  onPressed: () {
-                                    print("reply");
-                                  },
-                                  child: Text(
-                                    "Reply",
-                                    style: TextStyle(
-                                      fontSize: 13.0,
-                                      color: Colors.orange[900],
-                                    ),
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  //the file is changed
+                                  padding: EdgeInsets.only(top: pad),
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        snapshot.data.profileImage),
+                                    radius: 20.0,
                                   ),
                                 ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: pad, right: pad, top: pad),
+                                        child: Text(
+                                          "${snapshot.data.username}",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 17.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: pad),
+                                        child: Text(
+                                          "${dateFormaterA(widget.comment.createdDate)}",
+                                          style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 13.0),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.only(
+                                  left: 51.0,
+                                  top: 3.0,
+                                  bottom: 0.0,
+                                  right: 0.0),
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "${widget.comment.info}",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        height: 1.07,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.zero,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          padding: EdgeInsets.only(top: 6.0),
+                                          child: Text(
+                                            "${widget.comment.likes}",
+                                            style: TextStyle(),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(Icons.thumb_up),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(Icons.thumb_down),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child: FlatButton(
+                                              onPressed: () {
+                                                print("reply");
+                                              },
+                                              child: Text(
+                                                "Reply",
+                                                style: TextStyle(
+                                                  fontSize: 13.0,
+                                                  color: Colors.orange[900],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
+                );
+              }
+          }
+        },
       ),
     );
   }

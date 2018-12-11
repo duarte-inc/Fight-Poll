@@ -59,8 +59,7 @@ String viewRounderA(int viewInput) {
 }
 
 //-----------------------------AppBar-----------------------------------
-Widget appBarAll(
-    BuildContext context, String title, String title1, bool status) {
+Widget appBarAll(BuildContext context, String title, String title1, bool status) {
   return AppBar(
     leading: new IconButton(
       iconSize: 30.0,

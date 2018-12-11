@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mma_poll/model.dart';
 import 'package:mma_poll/poll.dart';
-import 'package:mma_poll/notification.dart';
 import 'package:mma_poll/_service.dart';
 
 class Feed extends StatefulWidget {
@@ -244,7 +243,7 @@ class _FightCardState extends State<FightCard> {
                 fit: StackFit.expand,
                 children: <Widget>[
                   Image.network(
-                    _image,
+                    this._image,
                     fit: BoxFit.cover,
                   ),
                   Positioned(
