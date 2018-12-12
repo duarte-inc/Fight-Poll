@@ -32,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void initState() {
     super.initState();
-    this._textController = new TextEditingController();
+    this._textController = TextEditingController();
   }
 
   void dispose() {

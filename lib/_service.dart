@@ -364,13 +364,13 @@ Future<PollModel> getPoll(String pollId) async {
   return poll;
 }
 
-Future<List<CommentModel>> getParentComments() async {
+Future<List<CommentModel>> getParentComments(int id) async {
   List<CommentModel> comments = new List();
   try {
     String _deviceId = await _getDeviceId();
     String _token = await _getDeviceToken();
     final http.Response response =
-        await http.get(_serverUrl + '/parent-comments', headers: {
+        await http.get(_serverUrl + '/parent-comments/$id', headers: {
       "device-id": _deviceId,
       "token": _token,
       "app-id": _applicationUniqueId,

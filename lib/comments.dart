@@ -10,10 +10,27 @@ class Comments extends StatefulWidget {
 
 class _CommentsState extends State<Comments> {
   Future<List<CommentModel>> _comments;
+  Key _key;
+  TextEditingController _textEditingController;
+  FocusNode _focusNode;
+
   @override
   void initState() {
     super.initState();
-    this._comments = getParentComments();
+    this._comments = getParentComments(2);
+    this._textEditingController = TextEditingController();
+    this._key = GlobalKey();
+  }
+
+  @override
+  void didUpdateWidget(Comments oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    this._textEditingController.dispose();
+    super.dispose();
   }
 
   @override
@@ -26,7 +43,7 @@ class _CommentsState extends State<Comments> {
           true,
         ),
         body: Container(
-          color: Colors.yellow[50],
+          color: Colors.white,
           child: FutureBuilder<List<CommentModel>>(
             future: this._comments,
             builder: (BuildContext context,
@@ -83,7 +100,9 @@ class _CommentsState extends State<Comments> {
                                   children: <Widget>[
                                     Expanded(
                                       child: TextField(
-                                        // maxLines: 50,
+                                        focusNode: this._focusNode,
+                                        controller: this._textEditingController,
+                                        key: this._key,
                                         maxLengthEnforced: true,
                                         decoration: InputDecoration(
                                           border: InputBorder.none,
@@ -95,7 +114,9 @@ class _CommentsState extends State<Comments> {
                                     ),
                                     Container(
                                       child: IconButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          print('commment submited');
+                                        },
                                         icon: Icon(
                                           Icons.send,
                                         ),

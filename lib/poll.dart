@@ -183,16 +183,27 @@ class _PollState extends State<Poll> {
                       ),
                       Container(
                         padding: EdgeInsets.only(
-                            right: 16.0, left: 16.0, bottom: 12.0),
+                            right: 16.0, left: 16.0, bottom: 12.0, top: 6.0),
                         width: MediaQuery.of(context).size.width,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Container(
-                              child: Text(
-                                "Poller: ${snapshot.data.username}",
-                                style: TextStyle(
-                                  color: Colors.black45,
+                              child: RichText(
+                                text: TextSpan(
+                                  text: '',
+                                  style: DefaultTextStyle.of(context).style,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: 'by ',
+                                        style:
+                                            TextStyle(color: Colors.blueGrey)),
+                                    TextSpan(
+                                        text: '${snapshot.data.username}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.blueGrey)),
+                                  ],
                                 ),
                               ),
                             ),
