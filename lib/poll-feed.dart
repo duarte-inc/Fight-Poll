@@ -42,6 +42,7 @@ class _FeedState extends State<Feed> {
               );
             case ConnectionState.done:
               if (snapshot.hasError) {
+                print(snapshot.error);
                 return Center(
                   child: Text("Sorry, we are having issues with our servers"),
                 );

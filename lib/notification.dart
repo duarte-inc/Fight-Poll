@@ -89,7 +89,7 @@ class _NotificationCardState extends State<NotificationCard> {
   Future<AccountModel> _account;
   bool _isRead;
   bool _isComment;
-  String _createdDate;
+  String _createdDate; //the bets man shall win
 
   @override
   void initState() {

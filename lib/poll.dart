@@ -27,8 +27,28 @@ class Poll extends StatefulWidget {
 class _PollState extends State<Poll> {
   Future<AccountModel> _poller;
   Notifier _notifier, _lastNotifier;
-  int _votesForFighter1, _votesForFighter2, _votesForDraw, _votesForCanceled;
+  int _votesForFighter1,
+      _votesForFighter2,
+      _votesForDraw,
+      _votesForCanceled,
+      _total;
   bool _selected, _status;
+  double _name1Perc, _name2Perc, _drawPerc, _cancelPerc;
+
+  void _calcPerc() {
+    //Calculating percentage
+    this._total = this._votesForFighter1 +
+        this._votesForFighter2 +
+        this._votesForDraw +
+        this._votesForCanceled;
+    if (_total == 0) {
+      this._total = 1;
+    }
+    this._name1Perc = (this._votesForFighter1 / this._total).abs();
+    this._name2Perc = (this._votesForFighter2 / this._total).abs();
+    this._drawPerc = (this._votesForDraw / this._total).abs();
+    this._cancelPerc = (this._votesForCanceled / this._total).abs();
+  }
 
   void _selectionManager() {
     if (this._notifier == Notifier.Red) {
@@ -64,6 +84,8 @@ class _PollState extends State<Poll> {
     _votesForDraw = widget.poll.votesForDraw;
     _votesForCanceled = widget.poll.votesForCanceled;
 
+    this._selectionManager();
+    this._calcPerc();
     print('initState');
   }
 
@@ -81,22 +103,6 @@ class _PollState extends State<Poll> {
 
   @override
   Widget build(BuildContext context) {
-    //This manages selection of choices
-    this._selectionManager();
-
-    //Calculating percentage
-    int total = this._votesForFighter1 +
-        this._votesForFighter2 +
-        this._votesForDraw +
-        this._votesForCanceled;
-    if (total == 0) {
-      total = 1;
-    }
-    double name1Perc = (this._votesForFighter1 / total).abs();
-    double name2Perc = (this._votesForFighter2 / total).abs();
-    double drawPerc = (this._votesForDraw / total).abs();
-    double cancelPerc = (this._votesForCanceled / total).abs();
-
     return Scaffold(
       appBar: AppBar(
         leading: new IconButton(
@@ -253,12 +259,14 @@ class _PollState extends State<Poll> {
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   enabled: widget.poll.status,
+                                  //If the status is closed, then show that of the database result
+                                  //Do this from the database and not from the frontend
                                   trailing: Icon(
                                     this._notifier == Notifier.Red
                                         ? Icons.check_circle
                                         : Icons.check_circle_outline,
                                     color: this._notifier == Notifier.Red
-                                        ? Colors.red[200]
+                                        ? Colors.red[300]
                                         : Colors.black45,
                                   ),
                                   onTap: () {
@@ -271,6 +279,8 @@ class _PollState extends State<Poll> {
                                           Notifier.Red) {
                                         this._notifier = Notifier.Red;
                                       }
+                                      this._selectionManager();
+                                      this._calcPerc();
                                     });
                                   },
                                 ),
@@ -282,7 +292,7 @@ class _PollState extends State<Poll> {
                                         color: Colors.yellow[700],
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                name1Perc,
+                                                this._name1Perc,
                                         height: 10.0,
                                       ),
                                     ),
@@ -323,6 +333,8 @@ class _PollState extends State<Poll> {
                                           Notifier.Yellow) {
                                         this._notifier = Notifier.Yellow;
                                       }
+                                      this._selectionManager();
+                                      this._calcPerc();
                                     });
                                   },
                                 ),
@@ -334,7 +346,7 @@ class _PollState extends State<Poll> {
                                         color: Colors.green,
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                name2Perc,
+                                                this._name2Perc,
                                         height: 10.0,
                                       ),
                                     ),
@@ -375,6 +387,8 @@ class _PollState extends State<Poll> {
                                           Notifier.Blue) {
                                         this._notifier = Notifier.Blue;
                                       }
+                                      this._selectionManager();
+                                      this._calcPerc();
                                     });
                                   },
                                 ),
@@ -386,7 +400,7 @@ class _PollState extends State<Poll> {
                                         color: Colors.blue,
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                drawPerc,
+                                                this._drawPerc,
                                         height: 10.0,
                                       ),
                                     ),
@@ -414,7 +428,7 @@ class _PollState extends State<Poll> {
                                         ? Icons.check_circle
                                         : Icons.check_circle_outline,
                                     color: this._notifier == Notifier.Green
-                                        ? Colors.red[200]
+                                        ? Colors.red[300]
                                         : Colors.black45,
                                   ),
                                   onTap: () {
@@ -427,6 +441,8 @@ class _PollState extends State<Poll> {
                                           Notifier.Green) {
                                         this._notifier = Notifier.Green;
                                       }
+                                      this._selectionManager();
+                                      this._calcPerc();
                                     });
                                   },
                                 ),
@@ -438,7 +454,7 @@ class _PollState extends State<Poll> {
                                         color: Colors.black87,
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                cancelPerc,
+                                                this._cancelPerc,
                                         height: 10.0,
                                       ),
                                     ),
@@ -459,12 +475,6 @@ class _PollState extends State<Poll> {
                                     [TextDecoration.none])),
                           ),
                           onTap: () {
-                            this._notifier = Notifier.None;
-                            this._lastNotifier = Notifier.None;
-                            _votesForFighter1 = widget.poll.votesForFighter1;
-                            _votesForFighter2 = widget.poll.votesForFighter2;
-                            _votesForDraw = widget.poll.votesForDraw;
-                            _votesForCanceled = widget.poll.votesForCanceled;
                             Navigator.push(
                               context,
                               MaterialPageRoute(
