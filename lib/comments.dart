@@ -4,6 +4,8 @@ import 'package:mma_poll/model.dart';
 import 'package:mma_poll/_service.dart';
 
 class Comments extends StatefulWidget {
+  final int pollId;
+  Comments({this.pollId});
   @override
   _CommentsState createState() => _CommentsState();
 }
@@ -17,7 +19,7 @@ class _CommentsState extends State<Comments> {
   @override
   void initState() {
     super.initState();
-    this._comments = getParentComments(2);
+    this._comments = getParentComments(widget.pollId);
     this._textEditingController = TextEditingController();
     this._key = GlobalKey();
   }
@@ -78,6 +80,7 @@ class _CommentsState extends State<Comments> {
                       child: Stack(
                         children: <Widget>[
                           Container(
+                            padding: EdgeInsets.only(bottom: 12.0),
                             child: ListView.builder(
                               itemCount: snapshot.data.length,
                               itemBuilder: (context, index) {

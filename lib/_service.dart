@@ -355,7 +355,6 @@ Future<CheckModel> getCheckedVote(String uId, String pId) async {
       if (json['success']) {
         checked = CheckModel.fromJson(json['result']);
       } else {
-        print(json);
         checked = CheckModel.fromJson(json);
       }
     }

@@ -27,6 +27,7 @@ class Poll extends StatefulWidget {
 class _PollState extends State<Poll> {
   Future<AccountModel> _poller;
   Future<CheckModel> _checker;
+  Future<List<CommentModel>> _comments;
 
   Notifier _notifier, _lastNotifier;
   int _votesForFighter1,
@@ -91,6 +92,8 @@ class _PollState extends State<Poll> {
     this._selectionManager();
     this._calcPerc();
 
+    this._comments = getParentComments(int.parse(widget.poll.id));
+
     print('initState');
   }
 
@@ -138,7 +141,7 @@ class _PollState extends State<Poll> {
         ],
       ),
       body: Container(
-        color: Colors.yellow[50],
+        color: Colors.white,
         child: FutureBuilder<AccountModel>(
           future: this._poller,
           builder:
@@ -187,7 +190,7 @@ class _PollState extends State<Poll> {
                       ),
                       Container(
                         padding: EdgeInsets.only(
-                            right: 16.0, left: 16.0, bottom: 12.0, top: 6.0),
+                            right: 16.0, left: 16.0, bottom: 12.0, top: 3.0),
                         width: MediaQuery.of(context).size.width,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -200,13 +203,15 @@ class _PollState extends State<Poll> {
                                   children: <TextSpan>[
                                     TextSpan(
                                       text: 'by ',
-                                      style: TextStyle(color: Colors.blueGrey),
+                                      style: TextStyle(
+                                          color: Colors.red[300],
+                                          fontStyle: FontStyle.normal),
                                     ),
                                     TextSpan(
                                       text: '${snapshot.data.username}',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.blueGrey),
+                                          color: Colors.red[300]),
                                     ),
                                   ],
                                 ),
@@ -612,20 +617,43 @@ class _PollState extends State<Poll> {
                       Container(
                         padding: EdgeInsets.all(5.0),
                         child: GestureDetector(
-                          child: Text(
-                            "View Comments [23]",
-                            style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                                decoration: TextDecoration.combine(
-                                    [TextDecoration.none])),
+                          child: FutureBuilder<List<CommentModel>>(
+                            future: this._comments,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<List<CommentModel>> snapshot) {
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.none:
+                                case ConnectionState.active:
+                                case ConnectionState.waiting:
+                                  return Container();
+                                case ConnectionState.done:
+                                  if (snapshot.hasError) {
+                                    return Center(
+                                      child: Text(
+                                          'Sorry, we\'re having issues with our servers'),
+                                    );
+                                  } else if (snapshot.hasData) {
+                                    return Text(
+                                      "View Comments ${snapshot.data.length == 0 ? '' : [snapshot.data.length]}",
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black87,
+                                          decoration: TextDecoration.combine(
+                                              [TextDecoration.none])),
+                                    );
+                                  }
+                              }
+                            },
                           ),
                           onTap: () {
+                            int pollId = int.parse(widget.poll.id);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Comments(),
+                                builder: (context) => Comments(
+                                      pollId: pollId,
+                                    ),
                               ),
                             );
                           },
