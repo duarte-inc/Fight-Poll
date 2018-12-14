@@ -330,16 +330,37 @@ Future<List<NotificationModel>> getNotifications(int userId) async {
           NotificationModel notification = NotificationModel.fromJson(j);
           notifications.add(notification);
         }
-      else {
-        NotificationModel notification =
-            NotificationModel.fromJson(json['result']);
-        notifications.add(notification);
-      }
     }
   } catch (error) {
     throw error;
   }
   return notifications;
+}
+
+Future<CheckModel> getCheckedVote(String uId, String pId) async {
+  int userId = int.parse(uId);
+  int pollId = int.parse(pId);
+  CheckModel checked;
+  try {
+    String _deviceId = await _getDeviceId();
+    String _token = await _getDeviceToken();
+    final http.Response response = await http
+        .get(_serverUrl + '/user/$userId/checked/poll/$pollId', headers: {
+      "device-id": _deviceId,
+      "token": _token,
+      "app-id": _applicationUniqueId,
+    });
+    if (response.statusCode == 200) {
+      dynamic json = jsonDecode(response.body);
+      if (json['success']) {
+        checked = CheckModel.fromJson(json['result']);
+      }
+    }
+  } catch (error) {
+    throw error;
+  }
+
+  return checked;
 }
 
 Future<PollModel> getPoll(String pollId) async {
@@ -394,7 +415,7 @@ Future<List<CommentModel>> getParentComments(int id) async {
 }
 
 Future<CommentModel> getCommenter(int userId) async {
-  CommentModel poll;
+  CommentModel comment;
   try {
     String _deviceId = await _getDeviceId();
     String _token = await _getDeviceToken();
@@ -406,12 +427,12 @@ Future<CommentModel> getCommenter(int userId) async {
     });
     if (response.statusCode == 200) {
       dynamic json = jsonDecode(response.body);
-      poll = CommentModel.fromJson(json);
+      comment = CommentModel.fromJson(json);
     }
   } catch (error) {
     throw error;
   }
-  return poll;
+  return comment;
 }
 
 Future<List<CommentModel>> getReplies(int parentId) async {

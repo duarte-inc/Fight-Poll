@@ -37,6 +37,30 @@ class AccountModel {
   }
 }
 
+//----------------Check----------------
+class CheckModel {
+  final String id;
+  final int voterId;
+  final int pollId;
+  final int checked;
+
+  CheckModel({
+    this.id,
+    this.voterId,
+    this.pollId,
+    this.checked,
+  });
+
+  factory CheckModel.fromJson(Map<String, dynamic> json) {
+    return CheckModel(
+      id: json['checked_id'],
+      voterId: json['voter_account_id'],
+      pollId: json['poll_id'],
+      checked: json['checked'],
+    );
+  }
+}
+
 //-----------------Poll-----------------
 class PollModel {
   final String id;

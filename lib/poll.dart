@@ -26,6 +26,8 @@ class Poll extends StatefulWidget {
 
 class _PollState extends State<Poll> {
   Future<AccountModel> _poller;
+  Future<CheckModel> _checker;
+
   Notifier _notifier, _lastNotifier;
   int _votesForFighter1,
       _votesForFighter2,
@@ -76,8 +78,10 @@ class _PollState extends State<Poll> {
     super.initState();
 
     this._poller = viewProfile(widget.poll.creatorId);
+    this._checker = getCheckedVote("1", "1");
     this._selected = widget.poll.status;
     this._status = widget.poll.status;
+    this._notifier = Notifier.None;
 
     _votesForFighter1 = widget.poll.votesForFighter1;
     _votesForFighter2 = widget.poll.votesForFighter2;
@@ -86,6 +90,7 @@ class _PollState extends State<Poll> {
 
     this._selectionManager();
     this._calcPerc();
+
     print('initState');
   }
 
@@ -103,6 +108,7 @@ class _PollState extends State<Poll> {
 
   @override
   Widget build(BuildContext context) {
+    print(this._notifier.index);
     return Scaffold(
       appBar: AppBar(
         leading: new IconButton(
@@ -121,12 +127,6 @@ class _PollState extends State<Poll> {
             iconSize: 30.0,
             icon: Icon(Icons.settings),
             onPressed: () {
-              this._lastNotifier = Notifier.None;
-              this._notifier = Notifier.None;
-              _votesForFighter1 = widget.poll.votesForFighter1;
-              _votesForFighter2 = widget.poll.votesForFighter2;
-              _votesForDraw = widget.poll.votesForDraw;
-              _votesForCanceled = widget.poll.votesForCanceled;
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -164,7 +164,6 @@ class _PollState extends State<Poll> {
                 );
               case ConnectionState.done:
                 if (snapshot.hasError) {
-                  print(snapshot.error);
                   return Center(
                     child: Text("Sorry, we're having issues with our servers"),
                   );
@@ -201,14 +200,15 @@ class _PollState extends State<Poll> {
                                   style: DefaultTextStyle.of(context).style,
                                   children: <TextSpan>[
                                     TextSpan(
-                                        text: 'by ',
-                                        style:
-                                            TextStyle(color: Colors.blueGrey)),
+                                      text: 'by ',
+                                      style: TextStyle(color: Colors.blueGrey),
+                                    ),
                                     TextSpan(
-                                        text: '${snapshot.data.username}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blueGrey)),
+                                      text: '${snapshot.data.username}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blueGrey),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -261,13 +261,44 @@ class _PollState extends State<Poll> {
                                   enabled: widget.poll.status,
                                   //If the status is closed, then show that of the database result
                                   //Do this from the database and not from the frontend
-                                  trailing: Icon(
-                                    this._notifier == Notifier.Red
-                                        ? Icons.check_circle
-                                        : Icons.check_circle_outline,
-                                    color: this._notifier == Notifier.Red
-                                        ? Colors.red[300]
-                                        : Colors.black45,
+                                  trailing: FutureBuilder<CheckModel>(
+                                    future: this._checker,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<CheckModel> snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                        case ConnectionState.active:
+                                        case ConnectionState.waiting:
+                                          return Container();
+                                        case ConnectionState.done:
+                                          if (snapshot.hasError) {
+                                            return Center(
+                                              child: Text(
+                                                  'Sorry, we\'re having issues with our servers'),
+                                            );
+                                          } else if (snapshot.hasData) {
+                                            print(snapshot.data.checked);
+                                            return Icon(
+                                              this._notifier.index ==
+                                                          Notifier.Red.index ||
+                                                      (this._status == false &&
+                                                          Notifier.Red.index ==
+                                                              snapshot
+                                                                  .data.checked)
+                                                  ? Icons.check_circle
+                                                  : Icons.check_circle_outline,
+                                              color: this._notifier.index ==
+                                                          Notifier.Red.index ||
+                                                      (this._status == false &&
+                                                          Notifier.Red.index ==
+                                                              snapshot
+                                                                  .data.checked)
+                                                  ? Colors.red[300]
+                                                  : Colors.black45,
+                                            );
+                                          }
+                                      }
+                                    },
                                   ),
                                   onTap: () {
                                     setState(() {
@@ -291,7 +322,8 @@ class _PollState extends State<Poll> {
                                       child: Container(
                                         color: Colors.yellow[700],
                                         width:
-                                            MediaQuery.of(context).size.width *
+                                            (MediaQuery.of(context).size.width -
+                                                    32.0) *
                                                 this._name1Perc,
                                         height: 10.0,
                                       ),
@@ -315,13 +347,47 @@ class _PollState extends State<Poll> {
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   enabled: widget.poll.status,
-                                  trailing: Icon(
-                                    this._notifier == Notifier.Yellow
-                                        ? Icons.check_circle
-                                        : Icons.check_circle_outline,
-                                    color: this._notifier == Notifier.Yellow
-                                        ? Colors.red[300]
-                                        : Colors.black45,
+                                  trailing: FutureBuilder<CheckModel>(
+                                    future: this._checker,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<CheckModel> snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                        case ConnectionState.active:
+                                        case ConnectionState.waiting:
+                                          return Container();
+                                        case ConnectionState.done:
+                                          if (snapshot.hasError) {
+                                            return Center(
+                                              child: Text(
+                                                  'Sorry, we\'re having issues with our servers'),
+                                            );
+                                          } else if (snapshot.hasData) {
+                                            return Icon(
+                                              this._notifier.index ==
+                                                          Notifier
+                                                              .Yellow.index ||
+                                                      (this._status == false &&
+                                                          Notifier.Yellow
+                                                                  .index ==
+                                                              snapshot
+                                                                  .data.checked)
+                                                  ? Icons.check_circle
+                                                  : Icons.check_circle_outline,
+                                              color: this._notifier.index ==
+                                                          Notifier
+                                                              .Yellow.index ||
+                                                      (this._status == false &&
+                                                          Notifier.Yellow
+                                                                  .index ==
+                                                              snapshot
+                                                                  .data.checked)
+                                                  ? Colors.red[300]
+                                                  : Colors.black45,
+                                            );
+                                          }
+                                      }
+                                    },
                                   ),
                                   onTap: () {
                                     this._selected = false;
@@ -345,7 +411,8 @@ class _PollState extends State<Poll> {
                                       child: Container(
                                         color: Colors.green,
                                         width:
-                                            MediaQuery.of(context).size.width *
+                                            (MediaQuery.of(context).size.width -
+                                                    32.0) *
                                                 this._name2Perc,
                                         height: 10.0,
                                       ),
@@ -369,13 +436,43 @@ class _PollState extends State<Poll> {
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   enabled: widget.poll.status,
-                                  trailing: Icon(
-                                    this._notifier == Notifier.Blue
-                                        ? Icons.check_circle
-                                        : Icons.check_circle_outline,
-                                    color: this._notifier == Notifier.Blue
-                                        ? Colors.red[300]
-                                        : Colors.black45,
+                                  trailing: FutureBuilder<CheckModel>(
+                                    future: this._checker,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<CheckModel> snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                        case ConnectionState.active:
+                                        case ConnectionState.waiting:
+                                          return Container();
+                                        case ConnectionState.done:
+                                          if (snapshot.hasError) {
+                                            return Center(
+                                              child: Text(
+                                                  'Sorry, we\'re having issues with our servers'),
+                                            );
+                                          } else if (snapshot.hasData) {
+                                            return Icon(
+                                              this._notifier.index ==
+                                                          Notifier.Blue.index ||
+                                                      (this._status == false &&
+                                                          Notifier.Blue.index ==
+                                                              snapshot
+                                                                  .data.checked)
+                                                  ? Icons.check_circle
+                                                  : Icons.check_circle_outline,
+                                              color: this._notifier.index ==
+                                                          Notifier.Blue.index ||
+                                                      (this._status == false &&
+                                                          Notifier.Blue.index ==
+                                                              snapshot
+                                                                  .data.checked)
+                                                  ? Colors.red[300]
+                                                  : Colors.black45,
+                                            );
+                                          }
+                                      }
+                                    },
                                   ),
                                   onTap: () {
                                     setState(() {
@@ -399,7 +496,8 @@ class _PollState extends State<Poll> {
                                       child: Container(
                                         color: Colors.blue,
                                         width:
-                                            MediaQuery.of(context).size.width *
+                                            (MediaQuery.of(context).size.width -
+                                                    32.0) *
                                                 this._drawPerc,
                                         height: 10.0,
                                       ),
@@ -423,13 +521,47 @@ class _PollState extends State<Poll> {
                                         TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   enabled: widget.poll.status,
-                                  trailing: Icon(
-                                    this._notifier == Notifier.Green
-                                        ? Icons.check_circle
-                                        : Icons.check_circle_outline,
-                                    color: this._notifier == Notifier.Green
-                                        ? Colors.red[300]
-                                        : Colors.black45,
+                                  trailing: FutureBuilder<CheckModel>(
+                                    future: this._checker,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<CheckModel> snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                        case ConnectionState.active:
+                                        case ConnectionState.waiting:
+                                          return Container();
+                                        case ConnectionState.done:
+                                          if (snapshot.hasError) {
+                                            return Center(
+                                              child: Text(
+                                                  'Sorry, we\'re having issues with our servers'),
+                                            );
+                                          } else if (snapshot.hasData) {
+                                            return Icon(
+                                              this._notifier.index ==
+                                                          Notifier
+                                                              .Green.index ||
+                                                      (this._status == false &&
+                                                          Notifier.Green
+                                                                  .index ==
+                                                              snapshot
+                                                                  .data.checked)
+                                                  ? Icons.check_circle
+                                                  : Icons.check_circle_outline,
+                                              color: this._notifier.index ==
+                                                          Notifier
+                                                              .Green.index ||
+                                                      (this._status == false &&
+                                                          Notifier.Green
+                                                                  .index ==
+                                                              snapshot
+                                                                  .data.checked)
+                                                  ? Colors.red[300]
+                                                  : Colors.black45,
+                                            );
+                                          }
+                                      }
+                                    },
                                   ),
                                   onTap: () {
                                     setState(() {
@@ -453,7 +585,8 @@ class _PollState extends State<Poll> {
                                       child: Container(
                                         color: Colors.black87,
                                         width:
-                                            MediaQuery.of(context).size.width *
+                                            (MediaQuery.of(context).size.width -
+                                                    32.0) *
                                                 this._cancelPerc,
                                         height: 10.0,
                                       ),
