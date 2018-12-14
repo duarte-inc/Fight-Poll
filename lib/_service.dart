@@ -17,7 +17,7 @@ String _deviceUniqueId = "";
 const String _tokenKey = "token";
 
 //Server url
-const String _serverUrl = 'http://10.159.58.135:3000';
+const String _serverUrl = 'http://10.151.200.162:3000';
 
 //Note final, its init only once
 final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
@@ -262,13 +262,13 @@ Future<Map<String, dynamic>> closePoll(
 
 //---Get
 
-Future<AccountModel> viewProfile(int id) async {
+Future<AccountModel> viewProfile(int userId) async {
   AccountModel user;
   try {
     String _deviceId = await _getDeviceId();
     String _token = await _getDeviceToken();
     final http.Response response =
-        await http.get(_serverUrl + '/users/$id/view-profile', headers: {
+        await http.get(_serverUrl + '/users/$userId/view-profile', headers: {
       "device-id": _deviceId,
       "token": _token,
       "app-id": _applicationUniqueId,
@@ -337,15 +337,15 @@ Future<List<NotificationModel>> getNotifications(int userId) async {
   return notifications;
 }
 
-Future<CheckModel> getCheckedVote(String uId, String pId) async {
-  int userId = int.parse(uId);
-  int pollId = int.parse(pId);
+Future<CheckModel> getCheckedVote(String userId, String pollId) async {
+  int uId = int.parse(userId);
+  int pId = int.parse(pollId);
   CheckModel checked;
   try {
     String _deviceId = await _getDeviceId();
     String _token = await _getDeviceToken();
     final http.Response response = await http
-        .get(_serverUrl + '/user/$userId/checked/poll/$pollId', headers: {
+        .get(_serverUrl + '/user/$uId/checked/poll/$pId', headers: {
       "device-id": _deviceId,
       "token": _token,
       "app-id": _applicationUniqueId,

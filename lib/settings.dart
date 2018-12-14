@@ -124,7 +124,7 @@ class Settings extends StatelessWidget {
   }
 }
 
-///////////////////////////////////------Edit Profile------////////////////////////////////////////
+////////////////////////------Edit Profile------/////////////////////
 class EditProfile extends StatefulWidget {
   @override
   _EditProfileState createState() => _EditProfileState();

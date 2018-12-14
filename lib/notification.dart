@@ -1,7 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mma_poll/functions.dart';
 import 'package:mma_poll/model.dart';
 import 'package:mma_poll/_service.dart';
+import 'package:mma_poll/account.dart';
+
 // Notifies when a poll you have created is closed. The thumbnail image in square will be shown
 // Also will notify when someone tags you in a comment. Profile image in circle avatar will be displayed
 
@@ -86,19 +89,35 @@ class NotificationCard extends StatefulWidget {
 
 class _NotificationCardState extends State<NotificationCard> {
   String _message;
-  Future<AccountModel> _account;
-  bool _isRead;
+  // bool _isRead;
   bool _isComment;
-  String _createdDate; //the bets man shall win
+  String _createdDate;
+  Future<AccountModel> _account;
+  TapGestureRecognizer _tapGestureRecognizer;
+
+  void _handlePress() {
+    this._account.then((user) {
+      print(user.id);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ViewProfile(userId: int.parse(user.id)),
+        ),
+      );
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     this._message = widget.notification.message;
-    this._isRead = widget.notification.isRead;
+    // this._isRead = widget.notification.isRead;
     this._createdDate = widget.notification.createdDate;
-    this._account = getNotificationUser(widget.notification.fromUserId);
     this._isComment = widget.notification.isComment;
+
+    this._account = viewProfile(widget.notification.fromUserId);
+    this._tapGestureRecognizer = TapGestureRecognizer();
+    this._tapGestureRecognizer.onTap = this._handlePress;
   }
 
   @override
@@ -142,11 +161,11 @@ class _NotificationCardState extends State<NotificationCard> {
                     ? GestureDetector(
                         onTap: () {
                           print('this is comment');
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Container()),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => Container()),
+                          // );
                         },
                         child: Card(
                           elevation: 0.0,
@@ -181,6 +200,8 @@ class _NotificationCardState extends State<NotificationCard> {
                                                       .style,
                                               children: <TextSpan>[
                                                 TextSpan(
+                                                  recognizer: this
+                                                      ._tapGestureRecognizer,
                                                   text:
                                                       '${snapshot.data.username}',
                                                   style: TextStyle(

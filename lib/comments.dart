@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mma_poll/functions.dart';
 import 'package:mma_poll/model.dart';
 import 'package:mma_poll/_service.dart';
+import 'package:flutter/gestures.dart';
+import 'package:mma_poll/account.dart';
 
 class Comments extends StatefulWidget {
   final int pollId;
@@ -212,12 +214,26 @@ class _CommentCardState extends State<CommentCard> {
                                       Padding(
                                         padding: EdgeInsets.only(
                                             left: pad, right: pad, top: pad),
-                                        child: Text(
-                                          "${snapshot.data.username}",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 17.0,
-                                            fontWeight: FontWeight.bold,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ViewProfile(
+                                                      userId: int.parse(
+                                                          snapshot.data.id),
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            "${snapshot.data.username}",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 17.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ),

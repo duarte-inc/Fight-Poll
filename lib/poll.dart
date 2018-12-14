@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mma_poll/comments.dart';
 import 'package:mma_poll/model.dart';
@@ -5,6 +6,7 @@ import 'package:mma_poll/_service.dart';
 import 'package:mma_poll/animation.dart';
 import 'package:mma_poll/settings.dart';
 import 'package:mma_poll/functions.dart';
+import 'package:mma_poll/account.dart';
 
 enum Notifier {
   Red,
@@ -28,6 +30,8 @@ class _PollState extends State<Poll> {
   Future<AccountModel> _poller;
   Future<CheckModel> _checker;
   Future<List<CommentModel>> _comments;
+
+  TapGestureRecognizer _tapRecognizer;
 
   Notifier _notifier, _lastNotifier;
   int _votesForFighter1,
@@ -74,6 +78,18 @@ class _PollState extends State<Poll> {
     }
   }
 
+  void _handlePress() {
+    this._poller.then((poller) {
+      print(poller.id);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ViewProfile(userId: int.parse(poller.id)),
+        ),
+      );
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -88,6 +104,9 @@ class _PollState extends State<Poll> {
     _votesForFighter2 = widget.poll.votesForFighter2;
     _votesForDraw = widget.poll.votesForDraw;
     _votesForCanceled = widget.poll.votesForCanceled;
+
+    this._tapRecognizer = TapGestureRecognizer();
+    this._tapRecognizer.onTap = this._handlePress;
 
     this._selectionManager();
     this._calcPerc();
@@ -105,6 +124,7 @@ class _PollState extends State<Poll> {
 
   @override
   void dispose() {
+    this._tapRecognizer.dispose();
     super.dispose();
     print('dispose');
   }
@@ -166,6 +186,7 @@ class _PollState extends State<Poll> {
                 );
               case ConnectionState.done:
                 if (snapshot.hasError) {
+                  print(snapshot.error);
                   return Center(
                     child: Text("Sorry, we're having issues with our servers"),
                   );
@@ -209,6 +230,7 @@ class _PollState extends State<Poll> {
                                     ),
                                     TextSpan(
                                       text: '${snapshot.data.username}',
+                                      recognizer: this._tapRecognizer,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.red[300]),
@@ -634,7 +656,9 @@ class _PollState extends State<Poll> {
                                     );
                                   } else if (snapshot.hasData) {
                                     return Text(
-                                      "View Comments ${snapshot.data.length == 0 ? '' : [snapshot.data.length]}",
+                                      "View Comments ${snapshot.data.length == 0 ? '' : [
+                                          snapshot.data.length
+                                        ]}",
                                       style: TextStyle(
                                           fontSize: 16.0,
                                           fontWeight: FontWeight.bold,
