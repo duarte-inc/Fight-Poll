@@ -78,7 +78,7 @@ class _PollState extends State<Poll> {
     super.initState();
 
     this._poller = viewProfile(widget.poll.creatorId);
-    this._checker = getCheckedVote("1", "1");
+    this._checker = getCheckedVote("3", widget.poll.id);
     this._selected = widget.poll.status;
     this._status = widget.poll.status;
     this._notifier = Notifier.None;
@@ -108,7 +108,6 @@ class _PollState extends State<Poll> {
 
   @override
   Widget build(BuildContext context) {
-    print(this._notifier.index);
     return Scaffold(
       appBar: AppBar(
         leading: new IconButton(
@@ -277,22 +276,25 @@ class _PollState extends State<Poll> {
                                                   'Sorry, we\'re having issues with our servers'),
                                             );
                                           } else if (snapshot.hasData) {
-                                            print(snapshot.data.checked);
                                             return Icon(
                                               this._notifier.index ==
                                                           Notifier.Red.index ||
                                                       (this._status == false &&
                                                           Notifier.Red.index ==
-                                                              snapshot
-                                                                  .data.checked)
+                                                              snapshot.data
+                                                                  .checked) ||
+                                                      snapshot.data.success ==
+                                                          true
                                                   ? Icons.check_circle
                                                   : Icons.check_circle_outline,
                                               color: this._notifier.index ==
                                                           Notifier.Red.index ||
                                                       (this._status == false &&
                                                           Notifier.Red.index ==
-                                                              snapshot
-                                                                  .data.checked)
+                                                              snapshot.data
+                                                                  .checked) ||
+                                                      snapshot.data.success ==
+                                                          true
                                                   ? Colors.red[300]
                                                   : Colors.black45,
                                             );
@@ -370,8 +372,10 @@ class _PollState extends State<Poll> {
                                                       (this._status == false &&
                                                           Notifier.Yellow
                                                                   .index ==
-                                                              snapshot
-                                                                  .data.checked)
+                                                              snapshot.data
+                                                                  .checked) ||
+                                                      snapshot.data.success ==
+                                                          true
                                                   ? Icons.check_circle
                                                   : Icons.check_circle_outline,
                                               color: this._notifier.index ==
@@ -380,8 +384,10 @@ class _PollState extends State<Poll> {
                                                       (this._status == false &&
                                                           Notifier.Yellow
                                                                   .index ==
-                                                              snapshot
-                                                                  .data.checked)
+                                                              snapshot.data
+                                                                  .checked) ||
+                                                      snapshot.data.success ==
+                                                          true
                                                   ? Colors.red[300]
                                                   : Colors.black45,
                                             );
@@ -457,16 +463,20 @@ class _PollState extends State<Poll> {
                                                           Notifier.Blue.index ||
                                                       (this._status == false &&
                                                           Notifier.Blue.index ==
-                                                              snapshot
-                                                                  .data.checked)
+                                                              snapshot.data
+                                                                  .checked) ||
+                                                      snapshot.data.success ==
+                                                          true
                                                   ? Icons.check_circle
                                                   : Icons.check_circle_outline,
                                               color: this._notifier.index ==
                                                           Notifier.Blue.index ||
                                                       (this._status == false &&
                                                           Notifier.Blue.index ==
-                                                              snapshot
-                                                                  .data.checked)
+                                                              snapshot.data
+                                                                  .checked) ||
+                                                      snapshot.data.success ==
+                                                          true
                                                   ? Colors.red[300]
                                                   : Colors.black45,
                                             );
@@ -544,8 +554,10 @@ class _PollState extends State<Poll> {
                                                       (this._status == false &&
                                                           Notifier.Green
                                                                   .index ==
-                                                              snapshot
-                                                                  .data.checked)
+                                                              snapshot.data
+                                                                  .checked) ||
+                                                      snapshot.data.success ==
+                                                          true
                                                   ? Icons.check_circle
                                                   : Icons.check_circle_outline,
                                               color: this._notifier.index ==
@@ -554,8 +566,10 @@ class _PollState extends State<Poll> {
                                                       (this._status == false &&
                                                           Notifier.Green
                                                                   .index ==
-                                                              snapshot
-                                                                  .data.checked)
+                                                              snapshot.data
+                                                                  .checked) ||
+                                                      snapshot.data.success ==
+                                                          true
                                                   ? Colors.red[300]
                                                   : Colors.black45,
                                             );

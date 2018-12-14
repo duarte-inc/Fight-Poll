@@ -17,7 +17,7 @@ String _deviceUniqueId = "";
 const String _tokenKey = "token";
 
 //Server url
-const String _serverUrl = 'http://10.151.135.207:3000';
+const String _serverUrl = 'http://10.159.58.135:3000';
 
 //Note final, its init only once
 final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
@@ -354,6 +354,9 @@ Future<CheckModel> getCheckedVote(String uId, String pId) async {
       dynamic json = jsonDecode(response.body);
       if (json['success']) {
         checked = CheckModel.fromJson(json['result']);
+      } else {
+        print(json);
+        checked = CheckModel.fromJson(json);
       }
     }
   } catch (error) {

@@ -43,12 +43,16 @@ class CheckModel {
   final int voterId;
   final int pollId;
   final int checked;
+  final bool success;
+  final String message;
 
   CheckModel({
     this.id,
     this.voterId,
     this.pollId,
     this.checked,
+    this.success,
+    this.message,
   });
 
   factory CheckModel.fromJson(Map<String, dynamic> json) {
@@ -57,6 +61,8 @@ class CheckModel {
       voterId: json['voter_account_id'],
       pollId: json['poll_id'],
       checked: json['checked'],
+      success: json['success'],
+      message: json['message'],
     );
   }
 }
