@@ -131,7 +131,7 @@ class _NotificationCardState extends State<NotificationCard> {
       padding: EdgeInsets.all(0.0),
       margin: EdgeInsets.all(0.0),
       child: FutureBuilder<AccountModel>(
-        future: getNotificationUser(widget.notification.fromUserId),
+        future: getUser(widget.notification.fromUserId),
         builder: (BuildContext context, AsyncSnapshot<AccountModel> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:

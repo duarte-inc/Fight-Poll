@@ -17,7 +17,7 @@ String _deviceUniqueId = "";
 const String _tokenKey = "token";
 
 //Server url
-const String _serverUrl = 'http://10.151.200.162:3000';
+const String _serverUrl = 'http://10.151.135.207:3000';
 
 //Note final, its init only once
 final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
@@ -344,8 +344,8 @@ Future<CheckModel> getCheckedVote(String userId, String pollId) async {
   try {
     String _deviceId = await _getDeviceId();
     String _token = await _getDeviceToken();
-    final http.Response response = await http
-        .get(_serverUrl + '/user/$uId/checked/poll/$pId', headers: {
+    final http.Response response =
+        await http.get(_serverUrl + '/user/$uId/checked/poll/$pId', headers: {
       "device-id": _deviceId,
       "token": _token,
       "app-id": _applicationUniqueId,
@@ -437,13 +437,13 @@ Future<CommentModel> getCommenter(int userId) async {
   return comment;
 }
 
-Future<List<CommentModel>> getReplies(int parentId) async {
+Future<List<CommentModel>> getReplies(int parentId, int pollId) async {
   List<CommentModel> comments = new List();
   try {
     String _deviceId = await _getDeviceId();
     String _token = await _getDeviceToken();
-    final http.Response response =
-        await http.get(_serverUrl + '/replies/$parentId', headers: {
+    final http.Response response = await http
+        .get(_serverUrl + '/replies/$parentId/poll/$pollId', headers: {
       "device-id": _deviceId,
       "token": _token,
       "app-id": _applicationUniqueId,
@@ -467,7 +467,7 @@ Future<List<CommentModel>> getReplies(int parentId) async {
   return comments;
 }
 
-Future<AccountModel> getNotificationUser(int userFromId) async {
+Future<AccountModel> getUser(int userFromId) async {
   AccountModel account;
   try {
     String _deviceId = await _getDeviceId();
