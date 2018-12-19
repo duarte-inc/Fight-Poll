@@ -58,15 +58,7 @@ class _CommentsState extends State<Comments> {
                 return Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  child: Container(
-                    width: 50.0,
-                    height: 50.0,
-                    padding: EdgeInsets.all(30.0),
-                    alignment: Alignment.topCenter,
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.black,
-                    ),
-                  ),
+                  child: Container(),
                 );
               case ConnectionState.done:
                 if (snapshot.hasError) {
@@ -85,6 +77,7 @@ class _CommentsState extends State<Comments> {
                             itemBuilder: (context, index) {
                               return CommentCard(
                                 comment: snapshot.data[index],
+                                pollId: widget.pollId,
                               );
                             },
                           ),
@@ -143,8 +136,9 @@ class _CommentsState extends State<Comments> {
 
 class CommentCard extends StatefulWidget {
   final CommentModel comment;
+  final int pollId;
 
-  CommentCard({this.comment});
+  CommentCard({this.comment, this.pollId});
 
   @override
   _CommentCardState createState() => _CommentCardState();
@@ -169,7 +163,7 @@ class _CommentCardState extends State<CommentCard> {
     const double pad = 10.0;
     return Container(
       child: FutureBuilder<AccountModel>(
-        future: this._account,
+        future:  getUser(widget.comment.creatorId),
         builder: (BuildContext context, AsyncSnapshot<AccountModel> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -312,9 +306,11 @@ class _CommentCardState extends State<CommentCard> {
                             bottom: 0.0,
                             right: 0.0,
                           ),
-                          child: Replies(),
+                          child: Replies(
+                              parentCommentId: int.parse(widget.comment.id),
+                              pollId: widget.pollId),
                         ),
-                        Container(height: pad,)
+                        
                       ],
                     ),
                   ),
@@ -344,7 +340,7 @@ class _RepliesState extends State<Replies> {
   @override
   void initState() {
     super.initState();
-    this._replies = getReplies(1, 1);
+    this._replies = getReplies(widget.parentCommentId, widget.pollId);
   }
 
   @override
@@ -357,7 +353,7 @@ class _RepliesState extends State<Replies> {
     return Container(
       color: Colors.white,
       child: FutureBuilder<List<CommentModel>>(
-        future: this._replies,
+        future: getReplies(widget.parentCommentId, widget.pollId),
         builder:
             (BuildContext context, AsyncSnapshot<List<CommentModel>> snapshot) {
           switch (snapshot.connectionState) {
@@ -367,15 +363,7 @@ class _RepliesState extends State<Replies> {
               return Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                child: Container(
-                  width: 50.0,
-                  height: 50.0,
-                  padding: EdgeInsets.all(30.0),
-                  alignment: Alignment.topCenter,
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.black,
-                  ),
-                ),
+                child: Container(),
               );
             case ConnectionState.done:
               if (snapshot.hasError) {
@@ -430,7 +418,7 @@ class _ReplyCardState extends State<ReplyCard> {
     const double pad = 10.0;
     return Container(
       child: FutureBuilder<AccountModel>(
-        future: this._account,
+        future: getUser(widget.reply.creatorId),
         builder: (BuildContext context, AsyncSnapshot<AccountModel> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -505,7 +493,7 @@ class _ReplyCardState extends State<ReplyCard> {
                               ),
                             ),
                           ],
-                        ),//51.0, top: 3.0, bottom: 0.0, right: 0.0)
+                        ), //51.0, top: 3.0, bottom: 0.0, right: 0.0)
                         Container(
                           alignment: Alignment.centerLeft,
                           padding: EdgeInsets.only(
@@ -528,7 +516,7 @@ class _ReplyCardState extends State<ReplyCard> {
                                 child: Row(
                                   children: <Widget>[
                                     Container(
-                                      padding: EdgeInsets.only(top: pad/2),
+                                      padding: EdgeInsets.only(top: pad / 2),
                                       child: Text(
                                         "${widget.reply.likes}",
                                         style: TextStyle(),
@@ -568,8 +556,8 @@ class _ReplyCardState extends State<ReplyCard> {
                       ],
                     ),
                   ),
-                );
-              }
+              );
+            }
           }
         },
       ),
