@@ -163,7 +163,7 @@ class _CommentCardState extends State<CommentCard> {
     const double pad = 10.0;
     return Container(
       child: FutureBuilder<AccountModel>(
-        future:  getUser(widget.comment.creatorId),
+        future: getUser(widget.comment.creatorId),
         builder: (BuildContext context, AsyncSnapshot<AccountModel> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -310,7 +310,6 @@ class _CommentCardState extends State<CommentCard> {
                               parentCommentId: int.parse(widget.comment.id),
                               pollId: widget.pollId),
                         ),
-                        
                       ],
                     ),
                   ),
@@ -334,18 +333,29 @@ class Replies extends StatefulWidget {
   _RepliesState createState() => _RepliesState();
 }
 
-class _RepliesState extends State<Replies> {
+class _RepliesState extends State<Replies> with AutomaticKeepAliveClientMixin {
   Future<List<CommentModel>> _replies;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
     this._replies = getReplies(widget.parentCommentId, widget.pollId);
+    print('initState');
   }
 
   @override
   void dispose() {
     super.dispose();
+    print('dispose');
+  }
+
+  @override
+  void didUpdateWidget(Replies oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print('didUpdateWidget');
   }
 
   @override
@@ -556,8 +566,8 @@ class _ReplyCardState extends State<ReplyCard> {
                       ],
                     ),
                   ),
-              );
-            }
+                );
+              }
           }
         },
       ),

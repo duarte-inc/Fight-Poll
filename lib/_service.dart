@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:io';
 import 'dart:convert';
 import 'package:device_info/device_info.dart';
@@ -261,7 +262,6 @@ Future<Map<String, dynamic>> closePoll(
 }
 
 //---Get
-
 Future<AccountModel> viewProfile(int userId) async {
   AccountModel user;
   try {
@@ -275,6 +275,7 @@ Future<AccountModel> viewProfile(int userId) async {
     });
     if (response.statusCode == 200) {
       dynamic json = jsonDecode(response.body);
+
       user = AccountModel.fromJson(json['result']);
     }
   } catch (error) {
@@ -438,33 +439,34 @@ Future<CommentModel> getCommenter(int userId) async {
 }
 
 Future<List<CommentModel>> getReplies(int parentId, int pollId) async {
-  List<CommentModel> comments = new List();
-  try {
-    String _deviceId = await _getDeviceId();
-    String _token = await _getDeviceToken();
-    final http.Response response = await http
-        .get(_serverUrl + '/replies/$parentId/poll/$pollId', headers: {
-      "device-id": _deviceId,
-      "token": _token,
-      "app-id": _applicationUniqueId,
-    });
-    if (response.statusCode == 200) {
-      dynamic json = jsonDecode(response.body);
-      if (json['success'])
-        for (dynamic j in json['result']) {
-          CommentModel comment = CommentModel.fromJson(j);
-          comments.add(comment);
-        } //Moleton gala of the time of India
-      else {
-        //The moleton dynamic of the time in India will be remembered in the place of all the fighting neighbors as the best in the world
-        CommentModel comment = CommentModel.fromJson(json['result']);
-        comments.add(comment);
+  final List<CommentModel> _replies = List();
+
+    try {
+      String _deviceId = await _getDeviceId();
+      String _token = await _getDeviceToken();
+      final http.Response response = await http
+          .get(_serverUrl + '/replies/$parentId/poll/$pollId', headers: {
+        "device-id": _deviceId,
+        "token": _token,
+        "app-id": _applicationUniqueId,
+      });
+      if (response.statusCode == 200) {
+        dynamic json = jsonDecode(response.body);
+        if (json['success'])
+          for (dynamic j in json['result']) {
+            CommentModel comment = CommentModel.fromJson(j);
+            _replies.add(comment);
+          }
+        else {
+          CommentModel comment = CommentModel.fromJson(json['result']);
+          _replies.add(comment);
+        }
       }
+    } catch (error) {
+      throw error;
     }
-  } catch (error) {
-    throw error;
-  }
-  return comments;
+  
+  return _replies;
 }
 
 Future<AccountModel> getUser(int userFromId) async {

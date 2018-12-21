@@ -80,7 +80,6 @@ class _PollState extends State<Poll> {
 
   void _handlePress() {
     this._poller.then((poller) {
-      print(poller.id);
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -113,20 +112,17 @@ class _PollState extends State<Poll> {
 
     this._comments = getParentComments(int.parse(widget.poll.id));
 
-    print('initState');
   }
 
   @override
   void didUpdateWidget(Poll oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print('didUpdate');
   }
 
   @override
   void dispose() {
     this._tapRecognizer.dispose();
     super.dispose();
-    print('dispose');
   }
 
   @override
@@ -186,7 +182,6 @@ class _PollState extends State<Poll> {
                 );
               case ConnectionState.done:
                 if (snapshot.hasError) {
-                  print(snapshot.error);
                   return Center(
                     child: Text("Sorry, we're having issues with our servers"),
                   );
